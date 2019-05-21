@@ -45,6 +45,8 @@ if(propFile.exists()){
 def git = System.getProperty('git',properties.get('git','git'))
 def repos_pwd = System.getProperty('repos_pwd',properties.get('repos_pwd','repos_pwd'))
 def repos_usr = System.getProperty('repos_usr',properties.get('repos_usr','repos_usr'))
+def python= System.getProperty('python',properties.get('python','python'))
+def rst2html= System.getProperty('rst2html',properties.get('rst2html','rst2html'))
 
 def generatedResources = "$buildDir/generated-resources/main"
 
@@ -89,11 +91,26 @@ task generateMyResources {
 		versionProps.store(versionPropsFile.newWriter(), null);
 	}
 }
+task usrdoc(type:Exec) {
+	def infile=new File(project.projectDir,'docs/av2geobau_de.rst')
+	def outfile=new File('docs/av2geobau_de.html')
+	inputs.file infile
+	outputs.file outfile
+	doFirst{
+		new File(project.buildDir,'docs').mkdir()
+	}
+		workingDir = project.buildDir
+		executable python
+		args = [rst2html, infile, outfile]
+}
 
-task bindist(type: Zip){
+task bindist(dependsOn:[usrdoc,jar],type: Zip){
 	baseName = project.name
 	destinationDir = file('dist')
 	from jar
+	into('docs'){
+		from files("LICENSE","docs/CHANGELOG.txt","build/docs/av2geobau_de.html")
+	}
 	into('libs'){
 		from configurations.runtimeClasspath
 		//def jars=[]

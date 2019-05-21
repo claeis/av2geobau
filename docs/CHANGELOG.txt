@@ -1,0 +1,6 @@
+LATEST VERSION
+-----------------------------
+
+av2geobau 1.0.0 (2019-05-xx)
+--------------------------------
+- initial coding/release

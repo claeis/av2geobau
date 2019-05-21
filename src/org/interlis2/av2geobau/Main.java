@@ -64,7 +64,7 @@ public class Main {
 					System.err.println();
 					//System.err.println("--gui                 start GUI.");
 				    System.err.println("--config file         config file to control mapping.");
-				    System.err.println("--log file            text file, that receives validation results.");
+				    System.err.println("--log file            text file, that receives conversion results.");
 					System.err.println("--modeldir "+Av2geobau.SETTING_DEFAULT_ILIDIRS+" list of directories/repositories with ili-files.");
 				    System.err.println("--proxy host          proxy server to access model repositories.");
 				    System.err.println("--proxyPort port      proxy port to access model repositories.");
@@ -144,7 +144,7 @@ public class Main {
 	protected static void printUsage()
 	{
 	  System.err.println ("USAGE");
-	  System.err.println("  java -jar "+APP_JAR+" [Options] in.itf");
+	  System.err.println("  java -jar "+APP_JAR+" [Options] in.itf out.dxf");
 	}
 	/** Gets version of program.
 	 * @return version e.g. "1.0.0"

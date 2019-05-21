@@ -1,9 +1,16 @@
 package org.interlis2.av2geobau;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
-import org.interlis2.av2geobau.impl.Itf2dxf;
+
+import org.interlis2.av2geobau.impl.DxfENTITY;
+import org.interlis2.av2geobau.impl.DxfGroup;
+import org.interlis2.av2geobau.impl.Mapper;
 
 import ch.ehi.basics.logging.AbstractStdListener;
 import ch.ehi.basics.logging.EhiLogger;
@@ -13,19 +20,18 @@ import ch.interlis.ili2c.Ili2cException;
 import ch.interlis.ili2c.Ili2cFailure;
 import ch.interlis.ili2c.gui.UserSettings;
 import ch.interlis.ili2c.metamodel.TransferDescription;
+import ch.interlis.iom.IomObject;
 import ch.interlis.iom_j.itf.ItfReader2;
 import ch.interlis.iox.EndTransferEvent;
 import ch.interlis.iox.IoxEvent;
 import ch.interlis.iox.IoxException;
+import ch.interlis.iox.ObjectEvent;
 import ch.interlis.iox_j.logging.FileLogger;
 import ch.interlis.iox_j.logging.StdLogger;
 import ch.interlis.iox_j.statistics.IoxStatistics;
 import ch.interlis.iox_j.validator.ValidationConfig;
 
-/** High-level API of the INTERLIS validator.
- * For a usage example of this class, see the implementation of class {@link Main}.
- * For a usage example of the low-level API, see the implementation of {@link #convert(String, Settings)}. 
- */
+
 public class Av2geobau {
 	
 	public static boolean convert(
@@ -58,7 +64,7 @@ public class Av2geobau {
 		AbstractStdListener logStderr=null;
 		boolean ret=false;
 		try{
-			// setup logging of validation results
+			// setup logging of conversion results
 			if(logFilename!=null){
 				logfile=new FileLogger(new java.io.File(logFilename));
 				EhiLogger.getInstance().addListener(logfile);
@@ -90,27 +96,46 @@ public class Av2geobau {
 			
 			// process data files
 			EhiLogger.logState("convert data...");
-			Itf2dxf itf2dxf=null;
 			IoxStatistics statistics=null;
 			try{
 				// setup log output
 				
-				itf2dxf=new Itf2dxf();
 
-				statistics=new IoxStatistics(td,settings);
+	            
+ 				statistics=new IoxStatistics(td,settings);
                 // setup data reader (ITF or XTF)
                 ItfReader2 ioxReader=new ItfReader2(itfFile,true);
                 ioxReader.setModel(td);
                 statistics.setFilename(itfFile.getPath());
+                java.io.Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dxfFile), "ISO-8859-1")); 
+                Mapper itf2dxf=new Mapper();
                 
                 try{
+                    writeBlocks(fw);
+                    fw.write(DxfGroup.toString(0, "SECTION"));
+                    fw.write(DxfGroup.toString(2, "ENTITIES"));
                     IoxEvent event=null;
                     do{
                         event=ioxReader.read();
-                        // feed object by object to validator
-                        itf2dxf.convert(event);
                         statistics.add(event);
+                        itf2dxf.addInput(event);
+                        if(event instanceof ObjectEvent) {
+                            IomObject iomObjDxf=itf2dxf.getMappedObject();
+                            while(iomObjDxf!=null) {
+                                String dxfFragment=DxfENTITY.feature2Dxf(iomObjDxf);
+                                fw.write(dxfFragment);
+                                iomObjDxf=itf2dxf.getMappedObject();
+                            }
+                        }
                     }while(!(event instanceof EndTransferEvent));
+                    IomObject iomObjDxf=itf2dxf.getMappedObject();
+                    while(iomObjDxf!=null) {
+                        String dxfFragment=DxfENTITY.feature2Dxf(iomObjDxf);
+                        fw.write(dxfFragment);
+                        iomObjDxf=itf2dxf.getMappedObject();
+                    }
+                    fw.write(DxfGroup.toString(0, "ENDSEC"));
+                    fw.write(DxfGroup.toString(0, "EOF"));
                 }finally{
                     if(ioxReader!=null){
                         try {
@@ -119,6 +144,14 @@ public class Av2geobau {
                             EhiLogger.logError(e);
                         }
                         ioxReader=null;
+                    }
+                    if(itf2dxf!=null){
+                        itf2dxf.close();
+                        itf2dxf=null;
+                    }
+                    if(fw!=null) {
+                        fw.close();
+                        fw=null;
                     }
                 }
 				statistics.write2logger();
@@ -135,11 +168,6 @@ public class Av2geobau {
 				}
 				EhiLogger.logError(ex);
 				EhiLogger.logState("...conversion failed");
-			}finally{
-				if(itf2dxf!=null){
-					itf2dxf.close();
-					itf2dxf=null;
-				}
 			}
 		}finally{
 			if(logfile!=null){
@@ -156,7 +184,409 @@ public class Av2geobau {
 		return ret;
 	}
 
-	/** Compiles the required Interlis models.
+    private void writeBlocks(java.io.Writer fw) throws IOException {
+        // BLOCK (Symbole)             
+        fw.write(DxfGroup.toString(0, "SECTION"));
+        fw.write(DxfGroup.toString(2, "BLOCKS"));
+        
+        // GP Bolzen                
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "GPBOL"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.5"));
+        fw.write(DxfGroup.toString(0, "ENDBLK"));
+        fw.write(DxfGroup.toString(8, "0")); 
+        
+        // GP Rohr                
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "GPROH"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.5"));
+        fw.write(DxfGroup.toString(0, "ENDBLK"));
+        fw.write(DxfGroup.toString(8, "0"));   
+
+        // GP Pfahl                
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "GPPFA"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.5"));
+        fw.write(DxfGroup.toString(0, "ENDBLK"));
+        fw.write(DxfGroup.toString(8, "0"));     
+        
+        // GP unversichert
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "GPUV"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.1"));
+        fw.write(DxfGroup.toString(0, "ENDBLK"));
+        fw.write(DxfGroup.toString(8, "0"));
+
+        // GP Markstein
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "GPSTE"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.7"));
+        fw.write(DxfGroup.toString(0, "ENDBLK"));
+        fw.write(DxfGroup.toString(8, "0"));   
+        
+        // GP Kunststoff
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "GPKST"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.7"));
+        fw.write(DxfGroup.toString(0, "ENDBLK"));
+        fw.write(DxfGroup.toString(8, "0"));   
+
+        // GP Kreuz
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "GPKRZ"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.5"));
+        fw.write(DxfGroup.toString(0, "LINE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "-0.849"));
+        fw.write(DxfGroup.toString(20, "-0.849"));
+        fw.write(DxfGroup.toString(30, "0.000"));
+        fw.write(DxfGroup.toString(11, "-0.283"));
+        fw.write(DxfGroup.toString(21, "-0.283"));
+        fw.write(DxfGroup.toString(31, "0.000"));
+        fw.write(DxfGroup.toString(0, "LINE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "-0.284"));
+        fw.write(DxfGroup.toString(20, "0.284"));
+        fw.write(DxfGroup.toString(30, "0.000"));
+        fw.write(DxfGroup.toString(11, "-0.849"));
+        fw.write(DxfGroup.toString(21, "0.849"));
+        fw.write(DxfGroup.toString(31, "0.000"));
+        fw.write(DxfGroup.toString(0, "LINE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.283"));
+        fw.write(DxfGroup.toString(20, "0.283"));
+        fw.write(DxfGroup.toString(30, "0.000"));
+        fw.write(DxfGroup.toString(11, "0.849"));
+        fw.write(DxfGroup.toString(21, "0.849"));
+        fw.write(DxfGroup.toString(31, "0.000"));
+        fw.write(DxfGroup.toString(0, "LINE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.849"));
+        fw.write(DxfGroup.toString(20, "-0.849"));
+        fw.write(DxfGroup.toString(30, "0.000"));
+        fw.write(DxfGroup.toString(11, "0.283"));
+        fw.write(DxfGroup.toString(21, "-0.283"));
+        fw.write(DxfGroup.toString(31, "0.000"));
+        fw.write(DxfGroup.toString(0, "ENDBLK"));
+        fw.write(DxfGroup.toString(8, "0"));   
+        
+        // HGP
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "HGP"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "1.5"));
+        fw.write(DxfGroup.toString(0, "ENDBLK"));
+        fw.write(DxfGroup.toString(8, "0"));   
+
+        
+        // LFP1 
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "LFP1"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.8"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "1.3"));
+        fw.write(DxfGroup.toString(0, "ENDBLK")); 
+        fw.write(DxfGroup.toString(8, "0"));    
+        
+        // LFP2 
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "LFP2"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.8"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "1.3"));
+        fw.write(DxfGroup.toString(0, "ENDBLK")); 
+        fw.write(DxfGroup.toString(8, "0"));  
+
+        // HFP1
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "HFP1"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "1.0"));
+        fw.write(DxfGroup.toString(0, "ENDBLK")); 
+        fw.write(DxfGroup.toString(8, "0")); 
+        
+        // HFP2
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "HFP2"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "1.0"));
+        fw.write(DxfGroup.toString(0, "ENDBLK")); 
+        fw.write(DxfGroup.toString(8, "0")); 
+        
+        // HFP3
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "HFP3"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "1.0"));
+        fw.write(DxfGroup.toString(0, "ENDBLK")); 
+        fw.write(DxfGroup.toString(8, "0")); 
+        
+        // LFP3 Stein
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "LFP3ST"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.8"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "1.3"));
+        fw.write(DxfGroup.toString(0, "ENDBLK")); 
+        fw.write(DxfGroup.toString(8, "0")); 
+        
+        // LFP3 Bolzen
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "LFP3BO"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "1.0"));
+        fw.write(DxfGroup.toString(0, "ENDBLK")); 
+        fw.write(DxfGroup.toString(8, "0")); 
+        
+        // LFP3 uv
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "LFP3UV"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.3"));
+        fw.write(DxfGroup.toString(0, "ENDBLK")); 
+        fw.write(DxfGroup.toString(8, "0")); 
+        
+        // LFP3 Kreuz
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "LFP3KR"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.4"));
+        fw.write(DxfGroup.toString(0, "LINE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "-0.849"));
+        fw.write(DxfGroup.toString(20, "-0.849"));
+        fw.write(DxfGroup.toString(30, "0.000"));
+        fw.write(DxfGroup.toString(11, "-0.283"));
+        fw.write(DxfGroup.toString(21, "-0.283"));
+        fw.write(DxfGroup.toString(31, "0.000"));
+        fw.write(DxfGroup.toString(0, "LINE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "-0.284"));
+        fw.write(DxfGroup.toString(20, "0.284"));
+        fw.write(DxfGroup.toString(30, "0.000"));
+        fw.write(DxfGroup.toString(11, "-0.849"));
+        fw.write(DxfGroup.toString(21, "0.849"));
+        fw.write(DxfGroup.toString(31, "0.000"));
+        fw.write(DxfGroup.toString(0, "LINE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.283"));
+        fw.write(DxfGroup.toString(20, "0.283"));
+        fw.write(DxfGroup.toString(30, "0.000"));
+        fw.write(DxfGroup.toString(11, "0.849"));
+        fw.write(DxfGroup.toString(21, "0.849"));
+        fw.write(DxfGroup.toString(31, "0.000"));
+        fw.write(DxfGroup.toString(0, "LINE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.849"));
+        fw.write(DxfGroup.toString(20, "-0.849"));
+        fw.write(DxfGroup.toString(30, "0.000"));
+        fw.write(DxfGroup.toString(11, "0.283"));
+        fw.write(DxfGroup.toString(21, "-0.283"));
+        fw.write(DxfGroup.toString(31, "0.000"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "1.200667"));
+        fw.write(DxfGroup.toString(0, "ENDBLK"));
+        fw.write(DxfGroup.toString(8, "0")); 
+        
+        // EO Punkte
+        fw.write(DxfGroup.toString(0, "BLOCK"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(70, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(2, "EOPNT"));
+        fw.write(DxfGroup.toString(0, "CIRCLE"));
+        fw.write(DxfGroup.toString(8, "0"));
+        fw.write(DxfGroup.toString(10, "0.0"));
+        fw.write(DxfGroup.toString(20, "0.0"));
+        fw.write(DxfGroup.toString(30, "0.0"));
+        fw.write(DxfGroup.toString(40, "0.4"));
+        fw.write(DxfGroup.toString(0, "ENDBLK")); 
+        fw.write(DxfGroup.toString(8, "0")); 
+
+        fw.write(DxfGroup.toString(0, "ENDSEC"));
+    }
+    /** Compiles the required Interlis models.
 	 * @param aclass Interlis qualified class name of a required class.
 	 * @param ilifile Interlis model file to read. null if not known.
 	 * @param itfDir Folder with Interlis model files or null.
@@ -262,27 +692,22 @@ public class Av2geobau {
 	 * @see #ITF_DIR
 	 * @see #JAR_DIR
 	 */
-	public static final String SETTING_ILIDIRS="org.interlis2.validator.ilidirs";
+	public static final String SETTING_ILIDIRS="org.interlis2.av2geobau.ilidirs";
 	/** the main folder of program.
 	 */
-	public static final String SETTING_APPHOME="org.interlis2.validator.appHome";
-	/** Last used folder in the GUI.
+	public static final String SETTING_APPHOME="org.interlis2.av2geobau.appHome";
+	/** Name of the config file, that controls the conversion.
 	 */
-	public static final String SETTING_DIRUSED="org.interlis2.validator.dirused";
-	/** Name of the config file, that controls the model specific validation.
+	public static final String SETTING_CONFIGFILE = "org.interlis2.av2geobau.configfile";
+	/** Name of the log file that receives the conversion results.
 	 */
-	public static final String SETTING_CONFIGFILE = "org.interlis2.validator.configfile";
-	/** Name of the log file that receives the validation results.
-	 */
-	public static final String SETTING_LOGFILE = "org.interlis2.validator.log";
-	/** Placeholder, that will be replaced by the folder of the current to be validated transfer file. 
+	public static final String SETTING_LOGFILE = "org.interlis2.av2geobau.log";
+	/** Placeholder, that will be replaced by the folder of the current to be converted transfer file. 
 	 * @see #SETTING_ILIDIRS
 	 */
 	public static final String ITF_DIR="%ITF_DIR";
-	/** Placeholder, that will be replaced by the folder of the validator program. 
+	/** Placeholder, that will be replaced by the folder of the av2geobau program. 
 	 * @see #SETTING_ILIDIRS
 	 */
 	public static final String JAR_DIR="%JAR_DIR";
-	public static final String TRUE=ValidationConfig.TRUE;
-	public static final String FALSE=ValidationConfig.FALSE;
 }

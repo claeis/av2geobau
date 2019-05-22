@@ -89,7 +89,7 @@ public class DxfENTITY {
         sb.append(DxfGroup.toString(10, coord.x, precision));
         sb.append(DxfGroup.toString(20, coord.y, precision));
 
-        if(coord.z != Coordinate.NULL_ORDINATE) {
+        if(!Double.isNaN(coord.z)) {
             double h = coord.z;
             if(h > 0) {
                 sb.append(DxfGroup.toString(30, h, precision));
@@ -177,10 +177,10 @@ public class DxfENTITY {
 			sb.append(DxfGroup.toString(8, layerName));
 			sb.append(DxfGroup.toString(10, coords[i].x, precision));
 			sb.append(DxfGroup.toString(20, coords[i].y, precision));
-			if (Coordinate.NULL_ORDINATE!=(coords[i].z)) {
+			if (!Double.isNaN(coords[i].z)) {
 			    sb.append(DxfGroup.toString(30, coords[i].z, precision));
 			}else {
-	            sb.append(DxfGroup.toString(30, 0));
+	            sb.append(DxfGroup.toString(30, 0.0,precision));
 			}
 			sb.append(DxfGroup.toString(70, 1));
 		}
@@ -203,14 +203,16 @@ public class DxfENTITY {
 		sb.append(DxfGroup.toString(10, "0.0"));
 		sb.append(DxfGroup.toString(20, "0.0"));
 		sb.append(DxfGroup.toString(30, "0.0"));
-		if (!Double.isNaN(coords[0].z)) sb.append(DxfGroup.toString(30, "0.0"));
+		if (!Double.isNaN(coords[0].z)) {
+		    sb.append(DxfGroup.toString(30, "0.0"));
+		}
 		sb.append(DxfGroup.toString(70, 1));
 		for (int i = 0 ; i < coords.length ; i++) {
 			sb.append(DxfGroup.toString(0, "VERTEX"));
 			sb.append(DxfGroup.toString(8, layerName));
 			sb.append(DxfGroup.toString(10, coords[i].x, precision));
 			sb.append(DxfGroup.toString(20, coords[i].y, precision));
-			sb.append(DxfGroup.toString(30, 0, precision));
+			sb.append(DxfGroup.toString(30, 0.0, precision));
 			sb.append(DxfGroup.toString(70, 1));
 		}
 		sb.append(DxfGroup.toString(0, "SEQEND"));
@@ -221,7 +223,7 @@ public class DxfENTITY {
 			sb.append(DxfGroup.toString(66, 1));
 			sb.append(DxfGroup.toString(10, "0.0"));
 			sb.append(DxfGroup.toString(20, "0.0"));
-			sb.append(DxfGroup.toString(30, 0, precision));			
+			sb.append(DxfGroup.toString(30, "0.0"));			
 			sb.append(DxfGroup.toString(70, 1));
 			coords = geom.getInteriorRingN(h).getCoordinates();
 			for (int i = 0 ; i < coords.length ; i++) {
@@ -229,7 +231,7 @@ public class DxfENTITY {
 				sb.append(DxfGroup.toString(8, layerName));
 				sb.append(DxfGroup.toString(10, coords[i].x, precision));
 				sb.append(DxfGroup.toString(20, coords[i].y, precision));
-				sb.append(DxfGroup.toString(30, 0, precision));				
+				sb.append(DxfGroup.toString(30, 0.0, precision));				
 				sb.append(DxfGroup.toString(70, 1));
 			}
 			sb.append(DxfGroup.toString(0, "SEQEND"));

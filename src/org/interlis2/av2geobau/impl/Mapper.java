@@ -174,11 +174,12 @@ public class Mapper {
 
 
     private String mapOri(String ori) {
-        if(ori!=null) {
-            double val=Double.parseDouble(ori);
-            ori=Double.toString((100.0-val)*0.9);
+        if(ori==null) {
+            return null;
         }
-        return null;
+        double val=Double.parseDouble(ori);
+        ori=Double.toString((100.0-val)*0.9);
+        return ori;
     }
     private String mapVali(String vali) {
         if(vali==null) {

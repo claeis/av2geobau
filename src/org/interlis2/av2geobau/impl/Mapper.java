@@ -238,10 +238,10 @@ public class Mapper {
         if(z!=null) {
             geom.setattrvalue("C3", z);
         }
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_BLOCKINSERT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_BLOCK, block);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapLFP1Pos(IomObject iomObj) {
@@ -249,23 +249,23 @@ public class Mapper {
         String ref=refObj.getobjectrefoid();
         String nummer=lfp1_tid2nummer.get(ref);
         String layer="01119";
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, nummer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.35");
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(LFP1Pos.tag_Pos,0);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(LFP1Pos.tag_Ori));
         if(ori!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
         }
         String hali=mapHali(iomObj.getattrvalue(LFP1Pos.tag_HAli));
         if(hali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
         }
         String vali=mapVali(iomObj.getattrvalue(LFP1Pos.tag_VAli));
         if(vali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
         }
         out.add(dxfObj);
         
@@ -296,10 +296,10 @@ public class Mapper {
     if(z!=null) {
         geom.setattrvalue("C3", z);
     }
-    IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_BLOCKINSERT,null);
-    dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-    dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_BLOCK, block);
-    dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+    IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
+    dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+    dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
+    dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
     out.add(dxfObj);
     }
     private void mapLFP2Pos(IomObject iomObj) {
@@ -307,23 +307,23 @@ public class Mapper {
         String ref=refObj.getobjectrefoid();
         String nummer=lfp2_tid2nummer.get(ref);
         String layer="01129";
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, nummer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.35");
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(LFP2Pos.tag_Pos,0);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(LFP2Pos.tag_Ori));
         if(ori!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
         }
         String hali=mapHali(iomObj.getattrvalue(LFP2Pos.tag_HAli));
         if(hali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
         }
         String vali=mapVali(iomObj.getattrvalue(LFP2Pos.tag_VAli));
         if(vali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
         }
         out.add(dxfObj);
         
@@ -363,10 +363,10 @@ public class Mapper {
         if(z!=null) {
             geom.setattrvalue("C3", z);
         }
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_BLOCKINSERT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_BLOCK, block);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapLFP3Pos(IomObject iomObj) {
@@ -374,23 +374,23 @@ public class Mapper {
         String ref=refObj.getobjectrefoid();
         String nummer=lfp3_tid2nummer.get(ref);
         String layer="01139";
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, nummer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.35");
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(LFP3Pos.tag_Pos,0);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(LFP3Pos.tag_Ori));
         if(ori!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
         }
         String hali=mapHali(iomObj.getattrvalue(LFP3Pos.tag_HAli));
         if(hali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
         }
         String vali=mapVali(iomObj.getattrvalue(LFP3Pos.tag_VAli));
         if(vali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
         }
         out.add(dxfObj);
     }
@@ -409,10 +409,10 @@ public class Mapper {
         if(z!=null) {
             geom.setattrvalue("C3", z);
         }
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_BLOCKINSERT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_BLOCK, block);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapHFP1Pos(IomObject iomObj) {
@@ -420,23 +420,23 @@ public class Mapper {
         String ref=refObj.getobjectrefoid();
         String nummer=hfp1_tid2nummer.get(ref);
         String layer="01149";
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, nummer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.35");
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(HFP1Pos.tag_Pos,0);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(HFP1Pos.tag_Ori));
         if(ori!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
         }
         String hali=mapHali(iomObj.getattrvalue(HFP1Pos.tag_HAli));
         if(hali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
         }
         String vali=mapVali(iomObj.getattrvalue(HFP1Pos.tag_VAli));
         if(vali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
         }
         out.add(dxfObj);
     }
@@ -454,10 +454,10 @@ public class Mapper {
         if(z!=null) {
             geom.setattrvalue("C3", z);
         }
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_BLOCKINSERT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_BLOCK, block);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapHFP2Pos(IomObject iomObj) {
@@ -465,23 +465,23 @@ public class Mapper {
         String ref=refObj.getobjectrefoid();
         String nummer=hfp2_tid2nummer.get(ref);
         String layer="01159";
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, nummer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.35");
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(HFP2Pos.tag_Pos,0);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(HFP2Pos.tag_Ori));
         if(ori!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
         }
         String hali=mapHali(iomObj.getattrvalue(HFP2Pos.tag_HAli));
         if(hali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
         }
         String vali=mapVali(iomObj.getattrvalue(HFP2Pos.tag_VAli));
         if(vali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
         }
         out.add(dxfObj);
     }
@@ -499,10 +499,10 @@ public class Mapper {
         if(z!=null) {
             geom.setattrvalue("C3", z);
         }
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_BLOCKINSERT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_BLOCK, block);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapHFP3Pos(IomObject iomObj) {
@@ -510,23 +510,23 @@ public class Mapper {
         String ref=refObj.getobjectrefoid();
         String nummer=hfp3_tid2nummer.get(ref);
         String layer="01169";
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, nummer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.35");
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(HFP3Pos.tag_Pos,0);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(HFP3Pos.tag_Ori));
         if(ori!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
         }
         String hali=mapHali(iomObj.getattrvalue(HFP3Pos.tag_HAli));
         if(hali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
         }
         String vali=mapVali(iomObj.getattrvalue(HFP3Pos.tag_VAli));
         if(vali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
         }
         out.add(dxfObj);
     }
@@ -541,9 +541,9 @@ public class Mapper {
             return;
         }
         IomObject geom=iomObj.getattrobj(ProjBoFlaeche.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYGON,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private HashSet<String> gebaeude=new HashSet<String>();
@@ -600,9 +600,9 @@ public class Mapper {
             return;
         }
         IomObject geom=iomObj.getattrobj(BoFlaeche.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYGON,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private HashMap<String,String> gebaeudename=new HashMap<String,String>();
@@ -632,23 +632,23 @@ public class Mapper {
             layer="01249";
         }
         if(layer!=null) {
-            IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, name);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"0.9");
+            IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"0.9");
             IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.ObjektnamePos.tag_Pos,0);
-            dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+            dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.ObjektnamePos.tag_Ori));
             if(ori!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
             }
             String hali=mapHali(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.ObjektnamePos.tag_HAli));
             if(hali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
             }
             String vali=mapVali(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.ObjektnamePos.tag_VAli));
             if(vali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
             }
             out.add(dxfObj);
         }
@@ -696,9 +696,9 @@ public class Mapper {
             return;
         }
         IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Flaechenelement.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYGON,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapEOLinienelement(IomObject iomObj) {
@@ -744,9 +744,9 @@ public class Mapper {
             return;
         }
         IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Linienelement.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYLINE,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapEOPunktelement(IomObject iomObj) {
@@ -768,10 +768,10 @@ public class Mapper {
             return;
         }
         IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Punktelement.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_BLOCKINSERT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_BLOCK, block);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     HashMap<String,String> geleisename=new HashMap<String,String>();
@@ -795,23 +795,23 @@ public class Mapper {
             layer="01339";
         }
         if(layer!=null) {
-            IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, name);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"0.9");
+            IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"0.9");
             IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.ObjektnamePos.tag_Pos,0);
-            dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+            dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.ObjektnamePos.tag_Ori));
             if(ori!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
             }
             String hali=mapHali(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.ObjektnamePos.tag_HAli));
             if(hali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
             }
             String vali=mapVali(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.ObjektnamePos.tag_VAli));
             if(vali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
             }
             out.add(dxfObj);
         }
@@ -827,23 +827,23 @@ public class Mapper {
         String ref=refObj.getobjectrefoid();
         String name=flurname_tid2name.get(ref);
         String layer="01519";
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, name);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.8");
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.8");
         IomObject geom=iomObj.getattrobj(FlurnamePos.tag_Pos,0);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(FlurnamePos.tag_Ori));
         if(ori!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
         }
         String hali=mapHali(iomObj.getattrvalue(FlurnamePos.tag_HAli));
         if(hali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
         }
         String vali=mapVali(iomObj.getattrvalue(FlurnamePos.tag_VAli));
         if(vali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
         }
         out.add(dxfObj);
     }
@@ -858,23 +858,23 @@ public class Mapper {
         String ref=refObj.getobjectrefoid();
         String name=ortsname_tid2name.get(ref);
         String layer="01529";
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, name);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.8");
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.8");
         IomObject geom=iomObj.getattrobj(OrtsnamePos.tag_Pos,0);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(OrtsnamePos.tag_Ori));
         if(ori!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
         }
         String hali=mapHali(iomObj.getattrvalue(OrtsnamePos.tag_HAli));
         if(hali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
         }
         String vali=mapVali(iomObj.getattrvalue(OrtsnamePos.tag_VAli));
         if(vali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
         }
         out.add(dxfObj);
     }
@@ -889,23 +889,23 @@ public class Mapper {
         String ref=refObj.getobjectrefoid();
         String name=gelaendename_tid2name.get(ref);
         String layer="01539";
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, name);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.8");
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.8");
         IomObject geom=iomObj.getattrobj(GelaendenamePos.tag_Pos,0);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(GelaendenamePos.tag_Ori));
         if(ori!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
         }
         String hali=mapHali(iomObj.getattrvalue(GelaendenamePos.tag_HAli));
         if(hali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
         }
         String vali=mapVali(iomObj.getattrvalue(GelaendenamePos.tag_VAli));
         if(vali!=null) {
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
         }
         out.add(dxfObj);
     }
@@ -938,10 +938,10 @@ public class Mapper {
         if(layer!=null) {
             String tid=iomObj.getobjectoid();
             IomObject geom=iomObj.getattrobj(Grenzpunkt.tag_Geometrie,0);
-            IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_BLOCKINSERT,null);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_BLOCK, block);
-            dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+            IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
+            dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             out.add(dxfObj);
         }
     }
@@ -973,23 +973,23 @@ public class Mapper {
             layer="01649";
         }
         if(nummer!=null) {
-            IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, nummer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.35");
+            IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
             IomObject geom=iomObj.getattrobj(ProjGrundstueckPos.tag_Pos,0);
-            dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+            dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(ProjGrundstueckPos.tag_Ori));
             if(ori!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
             }
             String hali=mapHali(iomObj.getattrvalue(ProjGrundstueckPos.tag_HAli));
             if(hali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
             }
             String vali=mapVali(iomObj.getattrvalue(ProjGrundstueckPos.tag_VAli));
             if(vali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
             }
             out.add(dxfObj);
         }
@@ -999,9 +999,9 @@ public class Mapper {
         String layer=null;
         layer="01621";
         IomObject geom=iomObj.getattrobj(ProjLiegenschaft.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYGON,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapProjSelbstRecht(IomObject iomObj) {
@@ -1009,9 +1009,9 @@ public class Mapper {
         String layer=null;
         layer="01641";
         IomObject geom=iomObj.getattrobj(ProjSelbstRecht.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYGON,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private HashMap<String,String> liegenschaften=new HashMap<String,String>();
@@ -1042,23 +1042,23 @@ public class Mapper {
             layer="01639";
         }
         if(nummer!=null) {
-            IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, nummer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.35");
+            IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
             IomObject geom=iomObj.getattrobj(GrundstueckPos.tag_Pos,0);
-            dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+            dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(GrundstueckPos.tag_Ori));
             if(ori!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
             }
             String hali=mapHali(iomObj.getattrvalue(GrundstueckPos.tag_HAli));
             if(hali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
             }
             String vali=mapVali(iomObj.getattrvalue(GrundstueckPos.tag_VAli));
             if(vali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
             }
             out.add(dxfObj);
         }
@@ -1068,9 +1068,9 @@ public class Mapper {
         String layer=null;
         layer="01611";
         IomObject geom=iomObj.getattrobj(Liegenschaft.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYGON,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapSelbstRecht(IomObject iomObj) {
@@ -1078,17 +1078,17 @@ public class Mapper {
         String layer=null;
         layer="01631";
         IomObject geom=iomObj.getattrobj(SelbstRecht.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYGON,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapRLLinienelement(IomObject iomObj) {
         String layer="01712";
         IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Rohrleitungen.Linienelement.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYLINE,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapHoheitsgrenzpunkt(IomObject iomObj) {
@@ -1097,10 +1097,10 @@ public class Mapper {
         if(layer!=null) {
             String tid=iomObj.getobjectoid();
             IomObject geom=iomObj.getattrobj(Hoheitsgrenzpunkt.tag_Geometrie,0);
-            IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_BLOCKINSERT,null);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_BLOCK, block);
-            dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+            IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
+            dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             out.add(dxfObj);
         }
     }
@@ -1109,33 +1109,33 @@ public class Mapper {
         String layer=null;
         layer="01811";
         IomObject geom=iomObj.getattrobj(Gemeindegrenze.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYGON,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapBezirksgrenzabschnitt(IomObject iomObj) {
         String layer="01821";
         IomObject geom=iomObj.getattrobj(Bezirksgrenzabschnitt.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYLINE,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapKantonsgrenzabschnitt(IomObject iomObj) {
         String layer="01831";
         IomObject geom=iomObj.getattrobj(Kantonsgrenzabschnitt.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYLINE,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapLandesgrenzabschnitt(IomObject iomObj) {
         String layer="01841";
         IomObject geom=iomObj.getattrobj(Landesgrenzabschnitt.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_POLYLINE,null);
-        dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-        dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+        dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private HashMap<String,String> lokalisationsName=new HashMap<String,String>();
@@ -1154,23 +1154,23 @@ public class Mapper {
             layer="01229";
         }
         if(text!=null) {
-            IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, text);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"1.5");
+            IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, text);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.5");
             IomObject geom=iomObj.getattrobj(LokalisationsNamePos.tag_Pos,0);
-            dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+            dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(LokalisationsNamePos.tag_Ori));
             if(ori!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
             }
             String hali=mapHali(iomObj.getattrvalue(LokalisationsNamePos.tag_HAli));
             if(hali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
             }
             String vali=mapVali(iomObj.getattrvalue(LokalisationsNamePos.tag_VAli));
             if(vali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
             }
             out.add(dxfObj);
         }
@@ -1200,23 +1200,23 @@ public class Mapper {
             layer="01919";
         }
         if(nummer!=null) {
-            IomObject dxfObj=new Iom_jObject(DxfENTITY.IOM_TEXT,null);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_LAYERNAME, layer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT, nummer);
-            dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_TEXT_SIZE,"0.9");
+            IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"0.9");
             IomObject geom=iomObj.getattrobj(HausnummerPos.tag_Pos,0);
-            dxfObj.addattrobj(DxfENTITY.IOM_ATTR_GEOM, geom);
+            dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(HausnummerPos.tag_Ori));
             if(ori!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_ORI, ori);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
             }
             String hali=mapHali(iomObj.getattrvalue(HausnummerPos.tag_HAli));
             if(hali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_HALI, hali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
             }
             String vali=mapVali(iomObj.getattrvalue(HausnummerPos.tag_VAli));
             if(vali!=null) {
-                dxfObj.setattrvalue(DxfENTITY.IOM_ATTR_VALI, vali);
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
             }
             out.add(dxfObj);
         }

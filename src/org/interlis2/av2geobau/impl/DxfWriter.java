@@ -1,10 +1,23 @@
 package org.interlis2.av2geobau.impl;
 
+import ch.ehi.basics.logging.EhiLogger;
 import ch.interlis.iom.IomObject;
+import ch.interlis.iom_j.itf.impl.hrg.HrgUtility;
+import ch.interlis.iom_j.itf.impl.jtsext.geom.ArcSegment;
+import ch.interlis.iom_j.itf.impl.jtsext.geom.CompoundCurve;
+import ch.interlis.iom_j.itf.impl.jtsext.geom.CompoundCurveRing;
+import ch.interlis.iom_j.itf.impl.jtsext.geom.CurvePolygon;
+import ch.interlis.iom_j.itf.impl.jtsext.geom.CurveSegment;
+import ch.interlis.iom_j.itf.impl.jtsext.geom.StraightSegment;
+import ch.interlis.iox.IoxException;
 import ch.interlis.iox_j.jts.Iox2jts;
 import ch.interlis.iox_j.jts.Iox2jtsException;
+import ch.interlis.iox_j.jts.Iox2jtsext;
+
+import java.util.ArrayList;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
 
 
@@ -139,81 +152,100 @@ public class DxfWriter {
 
 	public static String lineString2Dxf(IomObject feature) throws Exception {
         String layerName=feature.getattrvalue(IOM_ATTR_LAYERNAME);
-		Coordinate[] coords = Iox2jts.polyline2JTS(feature.getattrobj(IOM_ATTR_GEOM, 0),false,0.0).toCoordinateArray();
-		StringBuffer sb = new StringBuffer(DxfUtil.toString(0, "POLYLINE"));
+		CompoundCurve curve = Iox2jtsext.polyline2JTS(feature.getattrobj(IOM_ATTR_GEOM, 0),false,0.0);
+		StringBuffer sb = new StringBuffer();
 
-		sb.append(DxfUtil.toString(8, layerName));
+		writePolyline(sb, layerName, curve,true,false);
+		return sb.toString();
+	}
+
+    private static void writePolyline(StringBuffer sb, String layerName, LineString line,boolean is3D,boolean isClosed) {
+        ArrayList<CurveSegment> segs=new ArrayList<CurveSegment>();
+        if(line instanceof CompoundCurveRing) {
+            CompoundCurveRing ring=(CompoundCurveRing)line;
+            ArrayList<CompoundCurve> lines=ring.getLines();
+            for(CompoundCurve cline:lines) {
+                segs.addAll(cline.getSegments());
+            }
+        }else if(line instanceof CompoundCurve) {
+            segs=((CompoundCurve) line).getSegments();
+        }else {
+            Coordinate coords[]=line.getCoordinates();
+            for(int coordi=1;coordi<coords.length;coordi++){
+                segs.add(new StraightSegment(coords[coordi-1],coords[coordi]));
+            }
+        }
+        sb.append(DxfUtil.toString(0, "POLYLINE"));
+        sb.append(DxfUtil.toString(8, layerName));
 		
 		sb.append(DxfUtil.toString(66, 1));
 		sb.append(DxfUtil.toString(10, "0.0"));
 		sb.append(DxfUtil.toString(20, "0.0"));
 		sb.append(DxfUtil.toString(30, "0.0"));
-		sb.append(DxfUtil.toString(70, 8));
+		sb.append(DxfUtil.toString(70, (is3D?8:0)+(isClosed?1:0))); // Polyline flag: 1 = closed polyline, 8 = 3D Polyline
 
-		for (int i = 0 ; i < coords.length ; i++) {
+		for (int i = 0 ; i < segs.size() ; i++) {
 			sb.append(DxfUtil.toString(0, "VERTEX"));
 			sb.append(DxfUtil.toString(8, layerName));
-			sb.append(DxfUtil.toString(10, coords[i].x, precision));
-			sb.append(DxfUtil.toString(20, coords[i].y, precision));
-			if (!Double.isNaN(coords[i].z)) {
-			    sb.append(DxfUtil.toString(30, coords[i].z, precision));
+			final CurveSegment curveSegment = segs.get(i);
+            final Coordinate coord = curveSegment.getStartPoint();
+            sb.append(DxfUtil.toString(10, coord.x, precision));
+			sb.append(DxfUtil.toString(20, coord.y, precision));
+			if (!Double.isNaN(coord.z)) {
+			    sb.append(DxfUtil.toString(30, coord.z, precision));
 			}else {
 	            sb.append(DxfUtil.toString(30, 0.0,precision));
 			}
-			sb.append(DxfUtil.toString(70, 1));
+			if(curveSegment instanceof ArcSegment) {
+	            /* Bulge (optional; default is 0). The bulge is the tangent of one fourth the included angle for an
+	             * arc segment, made negative if the arc goes clockwise from the start point to the endpoint. A
+	             * bulge of 0 indicates a straight segment, and a bulge of 1 is a semicircle
+	             */
+			    final ArcSegment arc = (ArcSegment)curveSegment;
+			    if(!arc.isStraight()) {
+	                double theta = 2.0*Math.asin(CurveSegment.dist(arc.getStartPoint().x,arc.getStartPoint().y,arc.getEndPoint().x,arc.getEndPoint().y)/2.0/Math.abs(arc.getRadius()));
+                    if(theta<0.0 || theta>Math.PI) {
+                       throw new IllegalStateException("theta out of bounds "+theta);
+                    }
+                    double bulge=Math.tan(theta/4.0);
+	                sb.append(DxfUtil.toString(42, bulge*-arc.getSign(), precision));
+			    }
+			}
+			sb.append(DxfUtil.toString(70, 1)); // Vertex flag:  1 = Extra vertex created by curve-fitting
 		}
+        {
+            sb.append(DxfUtil.toString(0, "VERTEX"));
+            sb.append(DxfUtil.toString(8, layerName));
+            final Coordinate coord = segs.get(segs.size()-1).getEndPoint();
+            sb.append(DxfUtil.toString(10, coord.x, precision));
+            sb.append(DxfUtil.toString(20, coord.y, precision));
+            if (!Double.isNaN(coord.z)) {
+                sb.append(DxfUtil.toString(30, coord.z, precision));
+            }else {
+                sb.append(DxfUtil.toString(30, 0.0,precision));
+            }
+            sb.append(DxfUtil.toString(70, 1)); // Vertex flag:  1 = Extra vertex created by curve-fitting
+            
+        }
 		sb.append(DxfUtil.toString(0, "SEQEND"));
-		return sb.toString();
-	}
+    }
 
 	public static String polygon2Dxf(IomObject feature) {
         String layerName=feature.getattrvalue(IOM_ATTR_LAYERNAME);
 		Polygon geom;
         try {
-            geom = Iox2jts.surface2JTS(feature.getattrobj(IOM_ATTR_GEOM, 0),0.0);
-        } catch (Iox2jtsException e) {
+            geom = Iox2jtsext.surface2JTS(feature.getattrobj(IOM_ATTR_GEOM, 0),0.0);
+        } catch (IoxException e) {
             throw new IllegalArgumentException(e);
         }
-		Coordinate[] coords = geom.getExteriorRing().getCoordinates();
-		StringBuffer sb = new StringBuffer(DxfUtil.toString(0, "POLYLINE"));
-		sb.append(DxfUtil.toString(8, layerName));
-		sb.append(DxfUtil.toString(66, 1));
-		sb.append(DxfUtil.toString(10, "0.0"));
-		sb.append(DxfUtil.toString(20, "0.0"));
-		sb.append(DxfUtil.toString(30, "0.0"));
-		if (!Double.isNaN(coords[0].z)) {
-		    sb.append(DxfUtil.toString(30, "0.0"));
-		}
-		sb.append(DxfUtil.toString(70, 1));
-		for (int i = 0 ; i < coords.length ; i++) {
-			sb.append(DxfUtil.toString(0, "VERTEX"));
-			sb.append(DxfUtil.toString(8, layerName));
-			sb.append(DxfUtil.toString(10, coords[i].x, precision));
-			sb.append(DxfUtil.toString(20, coords[i].y, precision));
-			sb.append(DxfUtil.toString(30, 0.0, precision));
-			sb.append(DxfUtil.toString(70, 1));
-		}
-		sb.append(DxfUtil.toString(0, "SEQEND"));
-		for (int h = 0 ; h < geom.getNumInteriorRing() ; h++) {
-			//System.out.println("polygon2Dxf (hole)" + suffix);
-			sb.append(DxfUtil.toString(0, "POLYLINE"));
-			sb.append(DxfUtil.toString(8, layerName));
-			sb.append(DxfUtil.toString(66, 1));
-			sb.append(DxfUtil.toString(10, "0.0"));
-			sb.append(DxfUtil.toString(20, "0.0"));
-			sb.append(DxfUtil.toString(30, "0.0"));			
-			sb.append(DxfUtil.toString(70, 1));
-			coords = geom.getInteriorRingN(h).getCoordinates();
-			for (int i = 0 ; i < coords.length ; i++) {
-				sb.append(DxfUtil.toString(0, "VERTEX"));
-				sb.append(DxfUtil.toString(8, layerName));
-				sb.append(DxfUtil.toString(10, coords[i].x, precision));
-				sb.append(DxfUtil.toString(20, coords[i].y, precision));
-				sb.append(DxfUtil.toString(30, 0.0, precision));				
-				sb.append(DxfUtil.toString(70, 1));
-			}
-			sb.append(DxfUtil.toString(0, "SEQEND"));
-		}
+        LineString boundary = geom.getExteriorRing();
+        
+        StringBuffer sb = new StringBuffer();
+        writePolyline(sb,layerName,boundary,false,true);
+        for (int h = 0 ; h < geom.getNumInteriorRing() ; h++) {
+            boundary = geom.getInteriorRingN(h);
+            writePolyline(sb,layerName,boundary,false,true);
+        }
 		return sb.toString();
 	}
 

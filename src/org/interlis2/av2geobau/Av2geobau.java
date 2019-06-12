@@ -107,7 +107,7 @@ public class Av2geobau {
                 ItfReader2 ioxReader=new ItfReader2(itfFile,true);
                 ioxReader.setModel(td);
                 statistics.setFilename(itfFile.getPath());
-                java.io.Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dxfFile), "UTF-8")); // "ISO-8859-1" 
+                java.io.Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dxfFile), "ISO-8859-1")); 
                 Mapper itf2dxf=new Mapper();
                 
                 try{

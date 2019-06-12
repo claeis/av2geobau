@@ -46,11 +46,17 @@ public class DxfUtil {
     }
 
     public static String toString(int code, float value, int decimalPartLength) {
+        if(!Double.isFinite(value)) {
+            throw new IllegalArgumentException("unexpeced value "+value);
+        }
       return int34car(code) + "\r\n" +
               decimalFormats[decimalPartLength].format((double)value) + "\r\n";
     }
 
     public static String toString(int code, double value, int decimalPartLength) {
+      if(!Double.isFinite(value)) {
+          throw new IllegalArgumentException("unexpeced value "+value);
+      }
       return int34car(code) + "\r\n" +
               decimalFormats[decimalPartLength].format(value) + "\r\n";
     }

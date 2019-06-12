@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.util.NumberUtil;
 
 
 public class DxfWriter {
@@ -37,17 +38,6 @@ public class DxfWriter {
     public static final String IOM_ATTR_VALI = "vali"; 
     
 	private static int precision = 3;
-
-	private String layerName = "DEFAULT";
-	public String getLayerName() {return layerName;}
-
-	public void setLayerName(String layerName) {
-		this.layerName = layerName;
-	}
-
-	public DxfWriter(String layerName) {
-		this.layerName = layerName;
-	}
 
 	public static String feature2Dxf(IomObject feature) throws Exception {
 
@@ -203,12 +193,23 @@ public class DxfWriter {
 	             */
 			    final ArcSegment arc = (ArcSegment)curveSegment;
 			    if(!arc.isStraight()) {
-	                double theta = 2.0*Math.asin(CurveSegment.dist(arc.getStartPoint().x,arc.getStartPoint().y,arc.getEndPoint().x,arc.getEndPoint().y)/2.0/Math.abs(arc.getRadius()));
-                    if(theta<0.0 || theta>Math.PI) {
-                       throw new IllegalStateException("theta out of bounds "+theta);
+	                final double distDiv2 = CurveSegment.dist(arc.getStartPoint().x,arc.getStartPoint().y,arc.getEndPoint().x,arc.getEndPoint().y)/2.0;
+	                double bulge=0.0;
+                    final double absRadius = Math.abs(arc.getRadius());
+	                if(NumberUtil.equalsWithTolerance(distDiv2,absRadius,0.000001)) {
+	                    bulge=1.0;
+	                }else {
+	                    double theta = 2.0*Math.asin(distDiv2/absRadius);
+	                    if(theta<0.0 || theta>Math.PI) {
+	                       throw new IllegalStateException("theta out of bounds "+theta);
+	                    }
+	                    bulge=Math.tan(theta/4.0);
+	                }
+                    if(!Double.isFinite(bulge)) {
+                        throw new IllegalStateException("unexpected bulge "+bulge);
                     }
-                    double bulge=Math.tan(theta/4.0);
-	                sb.append(DxfUtil.toString(42, bulge*-arc.getSign(), precision));
+                    final String bulgeTxt = DxfUtil.toString(42, bulge*-arc.getSign(), precision);
+                    sb.append(bulgeTxt);
 			    }
 			}
 			sb.append(DxfUtil.toString(70, 1)); // Vertex flag:  1 = Extra vertex created by curve-fitting

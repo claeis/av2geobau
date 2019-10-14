@@ -448,7 +448,7 @@ public class Mapper {
         layer="01151";
         String tid=iomObj.getobjectoid();
         String nummer=iomObj.getattrvalue(HFP2.tag_Nummer);
-        hfp1_tid2nummer.put(tid, nummer);
+        hfp2_tid2nummer.put(tid, nummer);
         IomObject geom=iomObj.getattrobj(HFP2.tag_Geometrie,0);
         String z=iomObj.getattrvalue(HFP2.tag_HoeheGeom);
         if(z!=null) {

@@ -349,7 +349,7 @@ public class Mapper {
         }else if(punktzeichen.equals(Versicherungsart.tag_Kreuz)) {
             block="LFP3KR";
             layer="01133";
-        }else if(punktzeichen.equals(Versicherungsart.tag_unversichert)) {
+        }else if(punktzeichen.equals(Versicherungsart.tag_unversichert) || punktzeichen.equals(Versicherungsart.tag_Pfahl)) {
             block="LFP3UV";
             layer="01134";
         }else {

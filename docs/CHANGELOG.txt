@@ -4,4 +4,6 @@ LATEST VERSION
 av2geobau 1.0.0 (2020-01-23)
 --------------------------------
 - fix bulge calculation if arc>PI
+- iox-ili-1.20.15
+- ili2c-5.0.4
 - initial coding/release

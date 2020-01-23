@@ -16,9 +16,11 @@ import ch.interlis.iox_j.jts.Iox2jtsext;
 
 import java.util.ArrayList;
 
+import com.vividsolutions.jts.algorithm.Angle;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.util.GeometryEditor.CoordinateOperation;
 import com.vividsolutions.jts.util.NumberUtil;
 
 
@@ -220,22 +222,13 @@ public class DxfWriter {
      * bulge of 0 indicates a straight segment, and a bulge of 1 is a semicircle
      */
     public static double calcBulge(final ArcSegment arc) {
-        double bulge;
-        final double distDiv2 = CurveSegment.dist(arc.getStartPoint().x,arc.getStartPoint().y,arc.getEndPoint().x,arc.getEndPoint().y)/2.0;
-        final double absRadius = Math.abs(arc.getRadius());
-        if(NumberUtil.equalsWithTolerance(distDiv2,absRadius,0.000001)) {
-            bulge=1.0;
-        }else {
-            double theta = 2.0*Math.asin(distDiv2/absRadius);
-            if(theta<0.0 || theta>Math.PI) {
-               throw new IllegalStateException("theta out of bounds "+theta);
-            }
-            bulge=Math.tan(theta/4.0);
-        }
+        
+        double a = (Math.PI - Angle.angle(arc.getMidPoint(), arc.getStartPoint()) + Angle.angle(arc.getMidPoint(), arc.getEndPoint())) / 2.0;
+        double bulge= Math.sin(a) / Math.cos(a);
         if(!Double.isFinite(bulge)) {
             throw new IllegalStateException("unexpected bulge "+bulge);
         }
-        return  bulge*-arc.getSign();
+        return  bulge;
     }
 
 	public static String polygon2Dxf(IomObject feature) {

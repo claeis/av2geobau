@@ -187,28 +187,11 @@ public class DxfWriter {
 	            sb.append(DxfUtil.toString(30, 0.0,precision));
 			}
 			if(curveSegment instanceof ArcSegment) {
-	            /* Bulge (optional; default is 0). The bulge is the tangent of one fourth the included angle for an
-	             * arc segment, made negative if the arc goes clockwise from the start point to the endpoint. A
-	             * bulge of 0 indicates a straight segment, and a bulge of 1 is a semicircle
-	             */
+	            // Bulge (optional; default is 0).
 			    final ArcSegment arc = (ArcSegment)curveSegment;
 			    if(!arc.isStraight()) {
-	                final double distDiv2 = CurveSegment.dist(arc.getStartPoint().x,arc.getStartPoint().y,arc.getEndPoint().x,arc.getEndPoint().y)/2.0;
-	                double bulge=0.0;
-                    final double absRadius = Math.abs(arc.getRadius());
-	                if(NumberUtil.equalsWithTolerance(distDiv2,absRadius,0.000001)) {
-	                    bulge=1.0;
-	                }else {
-	                    double theta = 2.0*Math.asin(distDiv2/absRadius);
-	                    if(theta<0.0 || theta>Math.PI) {
-	                       throw new IllegalStateException("theta out of bounds "+theta);
-	                    }
-	                    bulge=Math.tan(theta/4.0);
-	                }
-                    if(!Double.isFinite(bulge)) {
-                        throw new IllegalStateException("unexpected bulge "+bulge);
-                    }
-                    final String bulgeTxt = DxfUtil.toString(42, bulge*-arc.getSign(), precision);
+	                double bulge=calcBulge(arc);
+                    final String bulgeTxt = DxfUtil.toString(42, bulge, precision);
                     sb.append(bulgeTxt);
 			    }
 			}
@@ -229,6 +212,30 @@ public class DxfWriter {
             
         }
 		sb.append(DxfUtil.toString(0, "SEQEND"));
+    }
+
+
+    /** The bulge is the tangent of one fourth the included angle for an
+     * arc segment, made negative if the arc goes clockwise from the start point to the endpoint. A
+     * bulge of 0 indicates a straight segment, and a bulge of 1 is a semicircle
+     */
+    public static double calcBulge(final ArcSegment arc) {
+        double bulge;
+        final double distDiv2 = CurveSegment.dist(arc.getStartPoint().x,arc.getStartPoint().y,arc.getEndPoint().x,arc.getEndPoint().y)/2.0;
+        final double absRadius = Math.abs(arc.getRadius());
+        if(NumberUtil.equalsWithTolerance(distDiv2,absRadius,0.000001)) {
+            bulge=1.0;
+        }else {
+            double theta = 2.0*Math.asin(distDiv2/absRadius);
+            if(theta<0.0 || theta>Math.PI) {
+               throw new IllegalStateException("theta out of bounds "+theta);
+            }
+            bulge=Math.tan(theta/4.0);
+        }
+        if(!Double.isFinite(bulge)) {
+            throw new IllegalStateException("unexpected bulge "+bulge);
+        }
+        return  bulge*-arc.getSign();
     }
 
 	public static String polygon2Dxf(IomObject feature) {

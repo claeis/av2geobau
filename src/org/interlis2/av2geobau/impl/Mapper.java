@@ -541,7 +541,7 @@ public class Mapper {
             return;
         }
         IomObject geom=iomObj.getattrobj(ProjBoFlaeche.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -600,7 +600,7 @@ public class Mapper {
             return;
         }
         IomObject geom=iomObj.getattrobj(BoFlaeche.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -696,7 +696,7 @@ public class Mapper {
             return;
         }
         IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Flaechenelement.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -744,7 +744,7 @@ public class Mapper {
             return;
         }
         IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Linienelement.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -999,7 +999,7 @@ public class Mapper {
         String layer=null;
         layer="01621";
         IomObject geom=iomObj.getattrobj(ProjLiegenschaft.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -1009,7 +1009,7 @@ public class Mapper {
         String layer=null;
         layer="01641";
         IomObject geom=iomObj.getattrobj(ProjSelbstRecht.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -1068,7 +1068,7 @@ public class Mapper {
         String layer=null;
         layer="01611";
         IomObject geom=iomObj.getattrobj(Liegenschaft.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -1078,7 +1078,7 @@ public class Mapper {
         String layer=null;
         layer="01631";
         IomObject geom=iomObj.getattrobj(SelbstRecht.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -1086,7 +1086,7 @@ public class Mapper {
     private void mapRLLinienelement(IomObject iomObj) {
         String layer="01712";
         IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Rohrleitungen.Linienelement.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -1109,7 +1109,7 @@ public class Mapper {
         String layer=null;
         layer="01811";
         IomObject geom=iomObj.getattrobj(Gemeindegrenze.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -1117,7 +1117,7 @@ public class Mapper {
     private void mapBezirksgrenzabschnitt(IomObject iomObj) {
         String layer="01821";
         IomObject geom=iomObj.getattrobj(Bezirksgrenzabschnitt.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -1125,7 +1125,7 @@ public class Mapper {
     private void mapKantonsgrenzabschnitt(IomObject iomObj) {
         String layer="01831";
         IomObject geom=iomObj.getattrobj(Kantonsgrenzabschnitt.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
@@ -1133,7 +1133,7 @@ public class Mapper {
     private void mapLandesgrenzabschnitt(IomObject iomObj) {
         String layer="01841";
         IomObject geom=iomObj.getattrobj(Landesgrenzabschnitt.tag_Geometrie,0);
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);

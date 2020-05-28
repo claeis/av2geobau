@@ -28,8 +28,8 @@ public class DxfWriter {
     public static final String IOM_DXF_TOPIC="Dxf.Topic";
     public static final String IOM_TEXT=IOM_DXF_TOPIC+".Text";
     public static final String IOM_BLOCKINSERT=IOM_DXF_TOPIC+".BlockInsert";
-    public static final String IOM_POLYLINE=IOM_DXF_TOPIC+".Polyline";
-    public static final String IOM_POLYGON=IOM_DXF_TOPIC+".Polygon";
+    public static final String IOM_2D_POLYLINE=IOM_DXF_TOPIC+".Polyline2d";
+    public static final String IOM_2D_POLYGON=IOM_DXF_TOPIC+".Polygon2d";
     public static final String IOM_ATTR_TEXT = "text";
     public static final String IOM_ATTR_TEXT_SIZE = "text_size";
     public static final String IOM_ATTR_GEOM = "geom";
@@ -49,11 +49,11 @@ public class DxfWriter {
 		}else if (type.equals(IOM_TEXT)) {
             return text2Dxf(feature);
 		}
-		else if (type.equals(IOM_POLYLINE)) {
-			return lineString2Dxf(feature);
+		else if (type.equals(IOM_2D_POLYLINE)) {
+			return lineString2d_2Dxf(feature);
 		}
-		else if (type.equals(IOM_POLYGON)) {
-			return polygon2Dxf(feature);
+		else if (type.equals(IOM_2D_POLYGON)) {
+			return polygon2d_2Dxf(feature);
 		}
 		else {
 			throw new IllegalArgumentException("unexpected type "+type);
@@ -142,12 +142,12 @@ public class DxfWriter {
         return sb.toString();
     }
 
-	public static String lineString2Dxf(IomObject feature) throws Exception {
+	public static String lineString2d_2Dxf(IomObject feature) throws Exception {
         String layerName=feature.getattrvalue(IOM_ATTR_LAYERNAME);
 		CompoundCurve curve = Iox2jtsext.polyline2JTS(feature.getattrobj(IOM_ATTR_GEOM, 0),false,0.0);
 		StringBuffer sb = new StringBuffer();
 
-		writePolyline(sb, layerName, curve,true,false);
+		writePolyline(sb, layerName, curve,false,false);
 		return sb.toString();
 	}
 
@@ -183,7 +183,7 @@ public class DxfWriter {
             final Coordinate coord = curveSegment.getStartPoint();
             sb.append(DxfUtil.toString(10, coord.x, precision));
 			sb.append(DxfUtil.toString(20, coord.y, precision));
-			if (!Double.isNaN(coord.z)) {
+			if (is3D && !Double.isNaN(coord.z)) {
 			    sb.append(DxfUtil.toString(30, coord.z, precision));
 			}else {
 	            sb.append(DxfUtil.toString(30, 0.0,precision));
@@ -205,7 +205,7 @@ public class DxfWriter {
             final Coordinate coord = segs.get(segs.size()-1).getEndPoint();
             sb.append(DxfUtil.toString(10, coord.x, precision));
             sb.append(DxfUtil.toString(20, coord.y, precision));
-            if (!Double.isNaN(coord.z)) {
+            if (is3D && !Double.isNaN(coord.z)) {
                 sb.append(DxfUtil.toString(30, coord.z, precision));
             }else {
                 sb.append(DxfUtil.toString(30, 0.0,precision));
@@ -231,7 +231,7 @@ public class DxfWriter {
         return  bulge;
     }
 
-	public static String polygon2Dxf(IomObject feature) {
+	public static String polygon2d_2Dxf(IomObject feature) {
         String layerName=feature.getattrvalue(IOM_ATTR_LAYERNAME);
 		Polygon geom;
         try {

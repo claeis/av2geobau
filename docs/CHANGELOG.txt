@@ -1,5 +1,8 @@
 LATEST VERSION
 -----------------------------
+
+av2geobau 1.0.1 (2020-05-29)
+--------------------------------
 - export POLYLINEs as 2D
 - iox-ili-1.21.0
 - ili2c-5.1.1

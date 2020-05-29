@@ -141,7 +141,7 @@ public class DxfWriterTest {
         segments.addattrobj("segment", p1);
         segments.addattrobj("segment", p2);
         
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYLINE,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String dxf=DxfWriter.feature2Dxf(dxfObj);
@@ -158,7 +158,7 @@ public class DxfWriterTest {
                 " 30\r\n" + 
                 "0.0\r\n" + 
                 " 70\r\n" + 
-                "     8\r\n" + 
+                "     0\r\n" + 
                 "  0\r\n" + 
                 "VERTEX\r\n" + 
                 "  8\r\n" + 
@@ -220,7 +220,7 @@ public class DxfWriterTest {
         segments.addattrobj("segment", p4);
         segments.addattrobj("segment", p5);
         
-        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_POLYGON,null);
+        IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String dxf=DxfWriter.feature2Dxf(dxfObj);

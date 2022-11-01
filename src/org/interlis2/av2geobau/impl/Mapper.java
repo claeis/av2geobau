@@ -684,6 +684,8 @@ public class Mapper {
             layer="01322";
         }else if(art.equals(EOArt.tag_schmaler_Weg)) {
             layer="01331";
+        }else if(art.equals(EOArt.tag_Bahnsteig)) {
+            layer="01332";
         }else if(art.equals(EOArt.tag_eingedoltes_oeffentliches_Gewaesser)) {
             layer="01341";
         }else if(art.equals(EOArt.tag_Uferverbauung) || art.equals(EOArt.tag_Schwelle)) {

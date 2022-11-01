@@ -24,15 +24,15 @@ before_script:
     - python -m pip freeze
 
 script: 
-  - gradle -Drst2html=`which rst2html.py` build 
+  - ./gradlew -Drst2html=`which rst2html.py` build 
 deploy:
   - provider: script
     skip_cleanup: true
-    script: gradle -Drst2html=`which rst2html.py` -Drepos_pwd=${repos_pwd} -Drepos_usr=jql_jars-INTE upload
+    script: ./gradlew -Drst2html=`which rst2html.py` -Drepos_pwd=${repos_pwd} -Drepos_usr=jql_jars-INTE upload
     on:
       branch: master
   - provider: script
     skip_cleanup: true
-    script: gradle -Drst2html=`which rst2html.py` -Drepos_pwd=${repos_pwd} -Drepos_usr=jql_jars-INTE '-Drelease=' upload
+    script: ./gradlew -Drst2html=`which rst2html.py` -Drepos_pwd=${repos_pwd} -Drepos_usr=jql_jars-INTE '-Drelease=' upload
     on:
       branch: stable

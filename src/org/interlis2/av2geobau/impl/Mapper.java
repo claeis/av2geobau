@@ -5,10 +5,20 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateList;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+
 import ch.interlis.iom.IomObject;
 import ch.interlis.iom_j.Iom_jObject;
 import ch.interlis.iox.IoxEvent;
 import ch.interlis.iox.ObjectEvent;
+import ch.interlis.iox_j.jts.Iox2jts;
+import ch.interlis.iox_j.jts.Iox2jtsException;
 import ch.interlis.models.DM01AVCH24LV95D.Status_GA;
 import ch.interlis.models.DM01AVCH24LV95D.Versicherungsart;
 import ch.interlis.models.DM01AVCH24LV95D.Bezirksgrenzen.Bezirksgrenzabschnitt;
@@ -59,7 +69,8 @@ import ch.interlis.models.INTERLIS.VALIGNMENT;
 
 public class Mapper {
 
-    List<IomObject> out=new ArrayList<IomObject>();
+    private static final double STROKE_ARC = 0.0001;
+    private List<IomObject> out=new ArrayList<IomObject>();
     public void addInput(IoxEvent event) {
         if(event instanceof ObjectEvent) {
             IomObject iomObj=((ObjectEvent) event).getIomObject();
@@ -213,6 +224,7 @@ public class Mapper {
     }
     
     private HashMap<String,String> lfp1_tid2nummer=new HashMap<String,String>();
+    private GeometryFactory jtsFactory=new GeometryFactory();
     private void mapLFP1(IomObject iomObj) {
         /*
             LFP1 begehbar 01111
@@ -232,8 +244,18 @@ public class Mapper {
         }
         String tid=iomObj.getobjectoid();
         String nummer=iomObj.getattrvalue(LFP1.tag_Nummer);
-        lfp1_tid2nummer.put(tid, nummer);
         IomObject geom=iomObj.getattrobj(LFP1.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        lfp1_tid2nummer.put(tid, nummer);
         String z=iomObj.getattrvalue(LFP1.tag_HoeheGeom);
         if(z!=null) {
             geom.setattrvalue("C3", z);
@@ -248,6 +270,9 @@ public class Mapper {
         IomObject refObj=iomObj.getattrobj(LFP1Pos.tag_LFP1Pos_von, 0);
         String ref=refObj.getobjectrefoid();
         String nummer=lfp1_tid2nummer.get(ref);
+        if(nummer==null) {
+            return;
+        }
         String layer="01119";
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
@@ -290,8 +315,18 @@ public class Mapper {
     }
     String tid=iomObj.getobjectoid();
     String nummer=iomObj.getattrvalue(LFP2.tag_Nummer);
-    lfp2_tid2nummer.put(tid, nummer);
     IomObject geom=iomObj.getattrobj(LFP2.tag_Geometrie,0);
+    if(perimeter!=null) {
+        try {
+            Coordinate coord = Iox2jts.coord2JTS(geom);
+            if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                return;
+            }
+        } catch (Iox2jtsException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+    lfp2_tid2nummer.put(tid, nummer);
     String z=iomObj.getattrvalue(LFP2.tag_HoeheGeom);
     if(z!=null) {
         geom.setattrvalue("C3", z);
@@ -306,6 +341,9 @@ public class Mapper {
         IomObject refObj=iomObj.getattrobj(LFP2Pos.tag_LFP2Pos_von, 0);
         String ref=refObj.getobjectrefoid();
         String nummer=lfp2_tid2nummer.get(ref);
+        if(nummer==null) {
+            return;
+        }
         String layer="01129";
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
@@ -357,8 +395,18 @@ public class Mapper {
         }
         String tid=iomObj.getobjectoid();
         String nummer=iomObj.getattrvalue(LFP3.tag_Nummer);
-        lfp3_tid2nummer.put(tid, nummer);
         IomObject geom=iomObj.getattrobj(LFP3.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        lfp3_tid2nummer.put(tid, nummer);
         String z=iomObj.getattrvalue(LFP3.tag_HoeheGeom);
         if(z!=null) {
             geom.setattrvalue("C3", z);
@@ -373,6 +421,9 @@ public class Mapper {
         IomObject refObj=iomObj.getattrobj(LFP3Pos.tag_LFP3Pos_von, 0);
         String ref=refObj.getobjectrefoid();
         String nummer=lfp3_tid2nummer.get(ref);
+        if(nummer==null) {
+            return;
+        }
         String layer="01139";
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
@@ -403,8 +454,18 @@ public class Mapper {
         layer="01141";
         String tid=iomObj.getobjectoid();
         String nummer=iomObj.getattrvalue(HFP1.tag_Nummer);
-        hfp1_tid2nummer.put(tid, nummer);
         IomObject geom=iomObj.getattrobj(HFP1.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        hfp1_tid2nummer.put(tid, nummer);
         String z=iomObj.getattrvalue(HFP1.tag_HoeheGeom);
         if(z!=null) {
             geom.setattrvalue("C3", z);
@@ -419,6 +480,9 @@ public class Mapper {
         IomObject refObj=iomObj.getattrobj(HFP1Pos.tag_HFP1Pos_von, 0);
         String ref=refObj.getobjectrefoid();
         String nummer=hfp1_tid2nummer.get(ref);
+        if(nummer==null) {
+            return;
+        }
         String layer="01149";
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
@@ -448,8 +512,18 @@ public class Mapper {
         layer="01151";
         String tid=iomObj.getobjectoid();
         String nummer=iomObj.getattrvalue(HFP2.tag_Nummer);
-        hfp2_tid2nummer.put(tid, nummer);
         IomObject geom=iomObj.getattrobj(HFP2.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        hfp2_tid2nummer.put(tid, nummer);
         String z=iomObj.getattrvalue(HFP2.tag_HoeheGeom);
         if(z!=null) {
             geom.setattrvalue("C3", z);
@@ -464,6 +538,9 @@ public class Mapper {
         IomObject refObj=iomObj.getattrobj(HFP2Pos.tag_HFP2Pos_von, 0);
         String ref=refObj.getobjectrefoid();
         String nummer=hfp2_tid2nummer.get(ref);
+        if(nummer==null) {
+            return;
+        }
         String layer="01159";
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
@@ -493,8 +570,18 @@ public class Mapper {
         layer="01161";
         String tid=iomObj.getobjectoid();
         String nummer=iomObj.getattrvalue(HFP3.tag_Nummer);
-        hfp3_tid2nummer.put(tid, nummer);
         IomObject geom=iomObj.getattrobj(HFP3.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+        hfp3_tid2nummer.put(tid, nummer);
         String z=iomObj.getattrvalue(HFP3.tag_HoeheGeom);
         if(z!=null) {
             geom.setattrvalue("C3", z);
@@ -509,6 +596,9 @@ public class Mapper {
         IomObject refObj=iomObj.getattrobj(HFP3Pos.tag_HFP3Pos_von, 0);
         String ref=refObj.getobjectrefoid();
         String nummer=hfp3_tid2nummer.get(ref);
+        if(nummer==null) {
+            return;
+        }
         String layer="01169";
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
@@ -534,13 +624,23 @@ public class Mapper {
         String tid=iomObj.getobjectoid();
         String art=iomObj.getattrvalue(ProjBoFlaeche.tag_Art);
         String layer=null;
+        IomObject geom=iomObj.getattrobj(ProjBoFlaeche.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         if(art.equals(BBArt.tag_Gebaeude)) {
             layer="01911";
             gebaeude.add(tid);
         }else {
             return;
         }
-        IomObject geom=iomObj.getattrobj(ProjBoFlaeche.tag_Geometrie,0);
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -552,6 +652,17 @@ public class Mapper {
         String tid=iomObj.getobjectoid();
         String art=iomObj.getattrvalue(BoFlaeche.tag_Art);
         String layer=null;
+        IomObject geom=iomObj.getattrobj(BoFlaeche.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         if(art.equals(BBArt.tag_Gebaeude)) {
             layer="01211";
             gebaeude.add(tid);
@@ -599,7 +710,6 @@ public class Mapper {
         }else {
             return;
         }
-        IomObject geom=iomObj.getattrobj(BoFlaeche.tag_Geometrie,0);
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -664,6 +774,17 @@ public class Mapper {
         }
     }
     private void mapEOFlaechenelement(IomObject iomObj) {
+        IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Flaechenelement.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject refObj=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Flaechenelement.tag_Flaechenelement_von, 0);
         String ref=refObj.getobjectrefoid();
         String art=einzelobjekte.get(ref);
@@ -697,13 +818,23 @@ public class Mapper {
         }else {
             return;
         }
-        IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Flaechenelement.tag_Geometrie,0);
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapEOLinienelement(IomObject iomObj) {
+        IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Linienelement.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                LineString jtsGeom = Iox2jts.polyline2JTSlineString(geom,false, STROKE_ARC);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject refObj=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Linienelement.tag_Linienelement_von, 0);
         String ref=refObj.getobjectrefoid();
         String art=einzelobjekte.get(ref);
@@ -745,13 +876,23 @@ public class Mapper {
         }else {
             return;
         }
-        IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Linienelement.tag_Geometrie,0);
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         out.add(dxfObj);
     }
     private void mapEOPunktelement(IomObject iomObj) {
+        IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Punktelement.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject refObj=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Punktelement.tag_Punktelement_von, 0);
         String ref=refObj.getobjectrefoid();
         String art=einzelobjekte.get(ref);
@@ -769,7 +910,6 @@ public class Mapper {
         }else {
             return;
         }
-        IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.Punktelement.tag_Geometrie,0);
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
@@ -820,7 +960,19 @@ public class Mapper {
     }
     private HashMap<String,String> flurname_tid2name=new HashMap<String,String>();
     private void mapFlurname(IomObject iomObj) {
+        if(perimeter!=null) {
+            IomObject geom=iomObj.getattrobj(Flurname.tag_Geometrie,0);
+            try {
+                Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         String tid=iomObj.getobjectoid();
+        
         String name=iomObj.getattrvalue(Flurname.tag_Name);
         flurname_tid2name.put(tid, name);
     }
@@ -828,6 +980,9 @@ public class Mapper {
         IomObject refObj=iomObj.getattrobj(FlurnamePos.tag_FlurnamePos_von, 0);
         String ref=refObj.getobjectrefoid();
         String name=flurname_tid2name.get(ref);
+        if(name==null) {
+            return;
+        }
         String layer="01519";
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
@@ -851,6 +1006,17 @@ public class Mapper {
     }
     private HashMap<String,String> ortsname_tid2name=new HashMap<String,String>();
     private void mapOrtsname(IomObject iomObj) {
+        if(perimeter!=null) {
+            IomObject geom=iomObj.getattrobj(Ortsname.tag_Geometrie,0);
+            try {
+                Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         String tid=iomObj.getobjectoid();
         String name=iomObj.getattrvalue(Ortsname.tag_Name);
         ortsname_tid2name.put(tid, name);
@@ -859,6 +1025,9 @@ public class Mapper {
         IomObject refObj=iomObj.getattrobj(OrtsnamePos.tag_OrtsnamePos_von, 0);
         String ref=refObj.getobjectrefoid();
         String name=ortsname_tid2name.get(ref);
+        if(name==null) {
+            return;
+        }
         String layer="01529";
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
@@ -896,6 +1065,16 @@ public class Mapper {
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.8");
         IomObject geom=iomObj.getattrobj(GelaendenamePos.tag_Pos,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(GelaendenamePos.tag_Ori));
         if(ori!=null) {
@@ -940,6 +1119,16 @@ public class Mapper {
         if(layer!=null) {
             String tid=iomObj.getobjectoid();
             IomObject geom=iomObj.getattrobj(Grenzpunkt.tag_Geometrie,0);
+            if(perimeter!=null) {
+                try {
+                    Coordinate coord = Iox2jts.coord2JTS(geom);
+                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                        return;
+                    }
+                } catch (Iox2jtsException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
             IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
@@ -980,6 +1169,16 @@ public class Mapper {
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
             IomObject geom=iomObj.getattrobj(ProjGrundstueckPos.tag_Pos,0);
+            if(perimeter!=null) {
+                try {
+                    Coordinate coord = Iox2jts.coord2JTS(geom);
+                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                        return;
+                    }
+                } catch (Iox2jtsException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
             dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(ProjGrundstueckPos.tag_Ori));
             if(ori!=null) {
@@ -1001,6 +1200,16 @@ public class Mapper {
         String layer=null;
         layer="01621";
         IomObject geom=iomObj.getattrobj(ProjLiegenschaft.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -1011,6 +1220,16 @@ public class Mapper {
         String layer=null;
         layer="01641";
         IomObject geom=iomObj.getattrobj(ProjSelbstRecht.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -1070,6 +1289,16 @@ public class Mapper {
         String layer=null;
         layer="01611";
         IomObject geom=iomObj.getattrobj(Liegenschaft.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -1080,6 +1309,16 @@ public class Mapper {
         String layer=null;
         layer="01631";
         IomObject geom=iomObj.getattrobj(SelbstRecht.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -1088,6 +1327,16 @@ public class Mapper {
     private void mapRLLinienelement(IomObject iomObj) {
         String layer="01712";
         IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Rohrleitungen.Linienelement.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                LineString jtsGeom = Iox2jts.polyline2JTSlineString(geom,false, STROKE_ARC);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -1099,6 +1348,16 @@ public class Mapper {
         if(layer!=null) {
             String tid=iomObj.getobjectoid();
             IomObject geom=iomObj.getattrobj(Hoheitsgrenzpunkt.tag_Geometrie,0);
+            if(perimeter!=null) {
+                try {
+                    Coordinate coord = Iox2jts.coord2JTS(geom);
+                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                        return;
+                    }
+                } catch (Iox2jtsException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
             IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_BLOCKINSERT,null);
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_BLOCK, block);
@@ -1111,6 +1370,16 @@ public class Mapper {
         String layer=null;
         layer="01811";
         IomObject geom=iomObj.getattrobj(Gemeindegrenze.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYGON,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -1119,6 +1388,16 @@ public class Mapper {
     private void mapBezirksgrenzabschnitt(IomObject iomObj) {
         String layer="01821";
         IomObject geom=iomObj.getattrobj(Bezirksgrenzabschnitt.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                LineString jtsGeom = Iox2jts.polyline2JTSlineString(geom, false, STROKE_ARC);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -1127,6 +1406,16 @@ public class Mapper {
     private void mapKantonsgrenzabschnitt(IomObject iomObj) {
         String layer="01831";
         IomObject geom=iomObj.getattrobj(Kantonsgrenzabschnitt.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                LineString jtsGeom = Iox2jts.polyline2JTSlineString(geom, false, STROKE_ARC);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -1135,6 +1424,16 @@ public class Mapper {
     private void mapLandesgrenzabschnitt(IomObject iomObj) {
         String layer="01841";
         IomObject geom=iomObj.getattrobj(Landesgrenzabschnitt.tag_Geometrie,0);
+        if(perimeter!=null) {
+            try {
+                LineString jtsGeom = Iox2jts.polyline2JTSlineString(geom, false, STROKE_ARC);
+                if(!perimeter.contains(jtsGeom)) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_2D_POLYLINE,null);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
@@ -1161,6 +1460,16 @@ public class Mapper {
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, text);
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.5");
             IomObject geom=iomObj.getattrobj(LokalisationsNamePos.tag_Pos,0);
+            if(perimeter!=null) {
+                try {
+                    Coordinate coord = Iox2jts.coord2JTS(geom);
+                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                        return;
+                    }
+                } catch (Iox2jtsException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
             dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(LokalisationsNamePos.tag_Ori));
             if(ori!=null) {
@@ -1207,6 +1516,16 @@ public class Mapper {
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"0.9");
             IomObject geom=iomObj.getattrobj(HausnummerPos.tag_Pos,0);
+            if(perimeter!=null) {
+                try {
+                    Coordinate coord = Iox2jts.coord2JTS(geom);
+                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                        return;
+                    }
+                } catch (Iox2jtsException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
             dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(HausnummerPos.tag_Ori));
             if(ori!=null) {
@@ -1222,6 +1541,11 @@ public class Mapper {
             }
             out.add(dxfObj);
         }
+    }
+    private Geometry perimeter=null;
+    public void setPerimeter(Geometry perimeter1) {
+        perimeter=perimeter1;
+        
     }
 
 }

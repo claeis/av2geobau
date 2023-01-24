@@ -1,5 +1,6 @@
 LATEST VERSION
 -----------------------------
+- add cmdline arg --perimeter
 
 av2geobau 1.1.0 (2022-11-01)
 --------------------------------

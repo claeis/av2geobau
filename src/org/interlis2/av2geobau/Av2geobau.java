@@ -12,6 +12,10 @@ import org.interlis2.av2geobau.impl.DxfWriter;
 import org.interlis2.av2geobau.impl.DxfUtil;
 import org.interlis2.av2geobau.impl.Mapper;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+
 import ch.ehi.basics.logging.AbstractStdListener;
 import ch.ehi.basics.logging.EhiLogger;
 import ch.ehi.basics.logging.StdListener;
@@ -73,6 +77,7 @@ public class Av2geobau {
             EhiLogger.getInstance().addListener(logStderr);
             EhiLogger.getInstance().removeListener(StdListener.getInstance());
 		    String configFilename=settings.getValue(Av2geobau.SETTING_CONFIGFILE);
+            String perimeterWKT=settings.getValue(Av2geobau.SETTING_PERIMETER);
 		    String appHome=settings.getValue(Av2geobau.SETTING_APPHOME);
 		    		    
 		    // give user important info (such as input files or program version)
@@ -85,6 +90,15 @@ public class Av2geobau {
 			if(configFilename!=null){
 				EhiLogger.logState("configFile <"+configFilename+">");
 			}
+			Geometry perimeter=null;
+            if(perimeterWKT!=null){
+                EhiLogger.logState("perimeter <"+perimeterWKT+">");
+                try {
+                    perimeter = new WKTReader().read(perimeterWKT);
+                } catch (ParseException e) {
+                    throw new IllegalArgumentException("failed to parse perimeter",e);
+                }
+            }
 		
 			TransferDescription td=null;
 			
@@ -109,6 +123,7 @@ public class Av2geobau {
                 statistics.setFilename(itfFile.getPath());
                 java.io.Writer fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dxfFile), "ISO-8859-1")); 
                 Mapper itf2dxf=new Mapper();
+                itf2dxf.setPerimeter(perimeter);
                 
                 try{
                     writeBlocks(fw);
@@ -699,6 +714,9 @@ public class Av2geobau {
 	/** Name of the config file, that controls the conversion.
 	 */
 	public static final String SETTING_CONFIGFILE = "org.interlis2.av2geobau.configfile";
+    /** Perimeter as WKT polygon, that is used to limit the conversion.
+     */
+    public static final String SETTING_PERIMETER = "org.interlis2.av2geobau.perimeter";
 	/** Name of the log file that receives the conversion results.
 	 */
 	public static final String SETTING_LOGFILE = "org.interlis2.av2geobau.log";

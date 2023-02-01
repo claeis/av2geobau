@@ -1268,6 +1268,16 @@ public class Mapper {
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
             IomObject geom=iomObj.getattrobj(GrundstueckPos.tag_Pos,0);
+            if(perimeter!=null) {
+                try {
+                    Coordinate coord = Iox2jts.coord2JTS(geom);
+                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                        return;
+                    }
+                } catch (Iox2jtsException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
             dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(GrundstueckPos.tag_Ori));
             if(ori!=null) {

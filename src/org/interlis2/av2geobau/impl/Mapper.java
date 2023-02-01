@@ -248,7 +248,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Coordinate coord = Iox2jts.coord2JTS(geom);
-                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -319,7 +319,7 @@ public class Mapper {
     if(perimeter!=null) {
         try {
             Coordinate coord = Iox2jts.coord2JTS(geom);
-            if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+            if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                 return;
             }
         } catch (Iox2jtsException e) {
@@ -399,7 +399,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Coordinate coord = Iox2jts.coord2JTS(geom);
-                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -458,7 +458,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Coordinate coord = Iox2jts.coord2JTS(geom);
-                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -516,7 +516,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Coordinate coord = Iox2jts.coord2JTS(geom);
-                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -574,7 +574,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Coordinate coord = Iox2jts.coord2JTS(geom);
-                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -628,7 +628,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -656,7 +656,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -778,7 +778,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -828,7 +828,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 LineString jtsGeom = Iox2jts.polyline2JTSlineString(geom,false, STROKE_ARC);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -886,7 +886,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Coordinate coord = Iox2jts.coord2JTS(geom);
-                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -964,7 +964,7 @@ public class Mapper {
             IomObject geom=iomObj.getattrobj(Flurname.tag_Geometrie,0);
             try {
                 Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1010,7 +1010,7 @@ public class Mapper {
             IomObject geom=iomObj.getattrobj(Ortsname.tag_Geometrie,0);
             try {
                 Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1068,7 +1068,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Coordinate coord = Iox2jts.coord2JTS(geom);
-                if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1122,7 +1122,7 @@ public class Mapper {
             if(perimeter!=null) {
                 try {
                     Coordinate coord = Iox2jts.coord2JTS(geom);
-                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                         return;
                     }
                 } catch (Iox2jtsException e) {
@@ -1172,7 +1172,7 @@ public class Mapper {
             if(perimeter!=null) {
                 try {
                     Coordinate coord = Iox2jts.coord2JTS(geom);
-                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                         return;
                     }
                 } catch (Iox2jtsException e) {
@@ -1203,7 +1203,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1223,7 +1223,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1271,7 +1271,7 @@ public class Mapper {
             if(perimeter!=null) {
                 try {
                     Coordinate coord = Iox2jts.coord2JTS(geom);
-                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                         return;
                     }
                 } catch (Iox2jtsException e) {
@@ -1302,7 +1302,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1322,7 +1322,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1340,7 +1340,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 LineString jtsGeom = Iox2jts.polyline2JTSlineString(geom,false, STROKE_ARC);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1361,7 +1361,7 @@ public class Mapper {
             if(perimeter!=null) {
                 try {
                     Coordinate coord = Iox2jts.coord2JTS(geom);
-                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                         return;
                     }
                 } catch (Iox2jtsException e) {
@@ -1383,7 +1383,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 Polygon jtsGeom = Iox2jts.surface2JTS(geom,0.0001);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1401,7 +1401,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 LineString jtsGeom = Iox2jts.polyline2JTSlineString(geom, false, STROKE_ARC);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1419,7 +1419,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 LineString jtsGeom = Iox2jts.polyline2JTSlineString(geom, false, STROKE_ARC);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1437,7 +1437,7 @@ public class Mapper {
         if(perimeter!=null) {
             try {
                 LineString jtsGeom = Iox2jts.polyline2JTSlineString(geom, false, STROKE_ARC);
-                if(!perimeter.contains(jtsGeom)) {
+                if(!intersectsPerimeter(jtsGeom)) {
                     return;
                 }
             } catch (Iox2jtsException e) {
@@ -1473,7 +1473,7 @@ public class Mapper {
             if(perimeter!=null) {
                 try {
                     Coordinate coord = Iox2jts.coord2JTS(geom);
-                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                         return;
                     }
                 } catch (Iox2jtsException e) {
@@ -1529,7 +1529,7 @@ public class Mapper {
             if(perimeter!=null) {
                 try {
                     Coordinate coord = Iox2jts.coord2JTS(geom);
-                    if(!perimeter.contains(jtsFactory.createPoint(coord))) {
+                    if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
                         return;
                     }
                 } catch (Iox2jtsException e) {
@@ -1555,7 +1555,9 @@ public class Mapper {
     private Geometry perimeter=null;
     public void setPerimeter(Geometry perimeter1) {
         perimeter=perimeter1;
-        
+    }
+    private boolean intersectsPerimeter(Geometry geom) {
+        return perimeter.intersects(geom);
     }
 
 }

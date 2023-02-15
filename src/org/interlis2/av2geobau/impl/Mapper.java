@@ -279,6 +279,16 @@ public class Mapper {
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(LFP1Pos.tag_Pos,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(LFP1Pos.tag_Ori));
         if(ori!=null) {
@@ -350,6 +360,16 @@ public class Mapper {
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(LFP2Pos.tag_Pos,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(LFP2Pos.tag_Ori));
         if(ori!=null) {
@@ -430,6 +450,16 @@ public class Mapper {
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(LFP3Pos.tag_Pos,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(LFP3Pos.tag_Ori));
         if(ori!=null) {
@@ -489,6 +519,16 @@ public class Mapper {
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(HFP1Pos.tag_Pos,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(HFP1Pos.tag_Ori));
         if(ori!=null) {
@@ -547,6 +587,16 @@ public class Mapper {
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(HFP2Pos.tag_Pos,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(HFP2Pos.tag_Ori));
         if(ori!=null) {
@@ -605,6 +655,16 @@ public class Mapper {
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, nummer);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.35");
         IomObject geom=iomObj.getattrobj(HFP3Pos.tag_Pos,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(HFP3Pos.tag_Ori));
         if(ori!=null) {
@@ -747,6 +807,16 @@ public class Mapper {
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"0.9");
             IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.ObjektnamePos.tag_Pos,0);
+            if(perimeter!=null) {
+                try {
+                    Coordinate coord = Iox2jts.coord2JTS(geom);
+                    if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                        return;
+                    }
+                } catch (Iox2jtsException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
             dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.ObjektnamePos.tag_Ori));
             if(ori!=null) {
@@ -942,6 +1012,16 @@ public class Mapper {
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
             dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"0.9");
             IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.ObjektnamePos.tag_Pos,0);
+            if(perimeter!=null) {
+                try {
+                    Coordinate coord = Iox2jts.coord2JTS(geom);
+                    if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                        return;
+                    }
+                } catch (Iox2jtsException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
             dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
             String ori=mapOri(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Einzelobjekte.ObjektnamePos.tag_Ori));
             if(ori!=null) {
@@ -989,6 +1069,16 @@ public class Mapper {
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.8");
         IomObject geom=iomObj.getattrobj(FlurnamePos.tag_Pos,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(FlurnamePos.tag_Ori));
         if(ori!=null) {
@@ -1034,6 +1124,16 @@ public class Mapper {
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
         dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"1.8");
         IomObject geom=iomObj.getattrobj(OrtsnamePos.tag_Pos,0);
+        if(perimeter!=null) {
+            try {
+                Coordinate coord = Iox2jts.coord2JTS(geom);
+                if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                    return;
+                }
+            } catch (Iox2jtsException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
         dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
         String ori=mapOri(iomObj.getattrvalue(OrtsnamePos.tag_Ori));
         if(ori!=null) {

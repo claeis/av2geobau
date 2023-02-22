@@ -41,6 +41,9 @@ public class Main {
 			}else if(arg.equals("--config")) {
 			    argi++;
 			    settings.setValue(Av2geobau.SETTING_CONFIGFILE, args[argi]);
+            }else if(arg.equals("--perimeter")) {
+                argi++;
+                settings.setValue(Av2geobau.SETTING_PERIMETER, args[argi]);
 			}else if(arg.equals("--log")) {
 			    argi++;
 			    settings.setValue(Av2geobau.SETTING_LOGFILE, args[argi]);
@@ -64,6 +67,7 @@ public class Main {
 					System.err.println();
 					//System.err.println("--gui                 start GUI.");
 				    System.err.println("--config file         config file to control mapping.");
+				    System.err.println("--perimeter WKT       perimeter as WKT polygon, that is used to limit the conversion.");
 				    System.err.println("--log file            text file, that receives conversion results.");
 					System.err.println("--modeldir "+Av2geobau.SETTING_DEFAULT_ILIDIRS+" list of directories/repositories with ili-files.");
 				    System.err.println("--proxy host          proxy server to access model repositories.");

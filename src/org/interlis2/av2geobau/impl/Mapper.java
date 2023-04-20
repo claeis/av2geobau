@@ -885,6 +885,8 @@ public class Mapper {
             layer="01351";
         }else if(art.equals(EOArt.tag_Denkmal) || art.equals(EOArt.tag_Ruine_archaeologisches_Objekt)) {
             layer="01352";
+        }else if(art.equals(EOArt.tag_weitere)) {
+            layer="01370";            
         }else {
             return;
         }

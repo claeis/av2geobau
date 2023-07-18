@@ -23,6 +23,7 @@ import ch.ehi.basics.settings.Settings;
 import ch.interlis.ili2c.Ili2cException;
 import ch.interlis.ili2c.Ili2cFailure;
 import ch.interlis.ili2c.gui.UserSettings;
+import ch.interlis.ili2c.metamodel.Ili2cMetaAttrs;
 import ch.interlis.ili2c.metamodel.TransferDescription;
 import ch.interlis.iom.IomObject;
 import ch.interlis.iom_j.itf.ItfReader2;
@@ -30,15 +31,21 @@ import ch.interlis.iox.EndTransferEvent;
 import ch.interlis.iox.IoxEvent;
 import ch.interlis.iox.IoxException;
 import ch.interlis.iox.ObjectEvent;
+import ch.interlis.iox_j.filter.TranslateToOrigin;
 import ch.interlis.iox_j.logging.FileLogger;
 import ch.interlis.iox_j.logging.StdLogger;
 import ch.interlis.iox_j.statistics.IoxStatistics;
+import ch.interlis.iox_j.utility.IoxUtility;
 import ch.interlis.iox_j.validator.ValidationConfig;
+import ch.interlis.models.DM01AVCH24LV95D_;
 
 
 public class Av2geobau {
 	
-	public static boolean convert(
+	public static final String DM01_IT = "MD01MUCH24MN95I";
+    public static final String DM01_FR = "MD01MOCH24MN95F";
+    public static final String DM01_DE = "DM01AVCH24LV95D";
+    public static boolean convert(
 			File itfFile,
 			File dxfFile,
 			Settings settings
@@ -102,11 +109,27 @@ public class Av2geobau {
 		
 			TransferDescription td=null;
 			
+			// get model from ITF
+			String modelFromItf=IoxUtility.getModelFromXtf(itfFile.getPath());
+			if(!modelFromItf.equals(DM01_DE) && !modelFromItf.equals(DM01_FR) && !modelFromItf.equals(DM01_IT)) {
+                throw new IllegalArgumentException("only "+DM01_DE+", "+DM01_FR+" or "+DM01_IT+" supported");
+			}
+            String[] models=null;
+            Ili2cMetaAttrs ili2cMetaAttrs=new Ili2cMetaAttrs();
+            if(modelFromItf.equals(DM01_FR) || modelFromItf.equals(DM01_IT)) {
+                ili2cMetaAttrs.setMetaAttrValue(modelFromItf, Ili2cMetaAttrs.ILI2C_TRANSLATION_OF, DM01_DE);
+                models = new String[] {DM01_DE,modelFromItf};
+            }else {
+                models = new String[] {DM01_DE};
+            }
+
 			// read ili models
-			td=compileIli("DM01AVCH24LV95D", null,itfFile.getAbsoluteFile().getParentFile().getAbsolutePath(),appHome, settings);
+            td=compileIli(models, null,itfFile.getAbsoluteFile().getParentFile().getAbsolutePath(),appHome, settings,ili2cMetaAttrs);
 			if(td==null){
 				return false;
 			}
+            TranslateToOrigin languageFilter=null;
+            languageFilter=new TranslateToOrigin(td, settings);
 			
 			// process data files
 			EhiLogger.logState("convert data...");
@@ -133,6 +156,9 @@ public class Av2geobau {
                     do{
                         event=ioxReader.read();
                         statistics.add(event);
+                        if(languageFilter!=null){
+                            event=languageFilter.filter(event);
+                        }
                         itf2dxf.addInput(event);
                         if(event instanceof ObjectEvent) {
                             IomObject iomObjDxf=itf2dxf.getMappedObject();
@@ -152,6 +178,9 @@ public class Av2geobau {
                     fw.write(DxfUtil.toString(0, "ENDSEC"));
                     fw.write(DxfUtil.toString(0, "EOF"));
                 }finally{
+                    if(languageFilter!=null){
+                        languageFilter.close();
+                    }
                     if(ioxReader!=null){
                         try {
                             ioxReader.close();
@@ -610,7 +639,7 @@ public class Av2geobau {
 	 * @return root object of java representation of Interlis model.
 	 * @see #SETTING_ILIDIRS
 	 */
-	public static TransferDescription compileIli(String modelName,File ilifile,String itfDir,String appHome,Settings settings) {
+	public static TransferDescription compileIli(String modelName[],File ilifile,String itfDir,String appHome,Settings settings,Ili2cMetaAttrs ili2cMetaAttrs) {
 		ArrayList modeldirv=new ArrayList();
 		String ilidirs=settings.getValue(Av2geobau.SETTING_ILIDIRS);
 		if(ilidirs==null){
@@ -670,7 +699,11 @@ public class Av2geobau {
 		}else{
 			ArrayList<String> modelv=new ArrayList<String>();
 			if(modelName!=null){
-				modelv.add(modelName);
+			    for(String m:modelName) {
+			        if(m!=null) {
+	                    modelv.add(m);
+			        }
+			    }
 			}
 			try {
 				//ili2cConfig=ch.interlis.ili2c.ModelScan.getConfig(modeldirv, modelv);
@@ -686,13 +719,8 @@ public class Av2geobau {
 		}
 		
 	
-		try {
-			ch.interlis.ili2c.Ili2c.logIliFiles(ili2cConfig);
-			td=ch.interlis.ili2c.Ili2c.runCompiler(ili2cConfig);
-		} catch (Ili2cFailure ex) {
-			EhiLogger.logError(ex);
-			return null;
-		}
+        ch.interlis.ili2c.Ili2c.logIliFiles(ili2cConfig);
+        td=ch.interlis.ili2c.Main.runCompiler(ili2cConfig,settings,ili2cMetaAttrs);
 		return td;
 	}
 

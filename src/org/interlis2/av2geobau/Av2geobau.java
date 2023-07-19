@@ -690,7 +690,7 @@ public class Av2geobau {
 				repositoryManager.setRepositories((String[])modeldirv.toArray(new String[]{}));
 				ArrayList<String> ilifiles=new ArrayList<String>();
 				ilifiles.add(ilifile.getPath());
-				ili2cConfig=repositoryManager.getConfigWithFiles(ilifiles);
+				ili2cConfig=repositoryManager.getConfigWithFiles(ilifiles,ili2cMetaAttrs);
 				ili2cConfig.setGenerateWarnings(false);
 			} catch (Ili2cException ex) {
 				EhiLogger.logError(ex);
@@ -709,7 +709,7 @@ public class Av2geobau {
 				//ili2cConfig=ch.interlis.ili2c.ModelScan.getConfig(modeldirv, modelv);
 				ch.interlis.ilirepository.IliManager modelManager=new ch.interlis.ilirepository.IliManager();
 				modelManager.setRepositories((String[])modeldirv.toArray(new String[]{}));
-				ili2cConfig=modelManager.getConfig(modelv, 0.0);
+				ili2cConfig=modelManager.getConfig(modelv, 0.0,ili2cMetaAttrs);
 				ili2cConfig.setGenerateWarnings(false);
 			} catch (Ili2cException ex) {
 				EhiLogger.logError(ex);

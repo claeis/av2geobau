@@ -10,7 +10,9 @@ Interlis-Transferdatei (itf) in eine DXF-Geobau Datei umwandelt.
 av2geobau funktioniert ohne Datenbank.
 
 Die Datenstruktur der DXF-Datei ist im Prinzip sehr einfach: 
-Die verschiedenen Informationen aus dem Datenmodell DM01 werden in 
+Die verschiedenen Informationen aus dem Datenmodell DM01 (die Modelle 
+DM01AVCH24LV95D, MD01MOCH24MN95F oder MD01MUCH24MN95I sind unterstützt) 
+werden in 
 verschiedene DXF-Layer abgebildet, z.B. die begehbaren LFP1 werden 
 in den Layer "01111" abgebildet. Oder die Gebäude in den Layer "01211".
 

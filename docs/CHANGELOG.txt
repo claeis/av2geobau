@@ -1,4 +1,4 @@
-av2geobau 1.3.0 (2023-07-18)
+av2geobau 1.3.0 (2023-08-03)
 --------------------------------
 - support FR and IT models (MD01MOCH24MN95F, MD01MUCH24MN95I)
 - ili2c-5.3.3

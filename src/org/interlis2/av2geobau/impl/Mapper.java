@@ -103,6 +103,10 @@ public class Mapper {
                 mapProjBoFlaeche(iomObj);
             }else  if(type.equals(BoFlaeche.tag)) {
                 mapBoFlaeche(iomObj);
+            }else  if(type.equals(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.Gebaeudenummer.tag)) {
+                mapBoFlaecheGebaeudenummer(iomObj);
+            }else  if(type.equals(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.GebaeudenummerPos.tag)) {
+                mapBoFlaecheGebaeudenummerPos(iomObj);
             }else  if(type.equals(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.Objektname.tag)) {
                 mapBoFlaecheObjektname(iomObj);
             }else  if(type.equals(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.ObjektnamePos.tag)){
@@ -827,6 +831,58 @@ public class Mapper {
                 dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
             }
             String vali=mapVali(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.ObjektnamePos.tag_VAli));
+            if(vali!=null) {
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
+            }
+            out.add(dxfObj);
+        }
+    }
+    private HashMap<String,String> gebaeudenummer=new HashMap<String,String>();
+    private void mapBoFlaecheGebaeudenummer(IomObject iomObj) {
+        String tid=iomObj.getobjectoid();
+        IomObject refObj=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.Gebaeudenummer.tag_Gebaeudenummer_von, 0);
+        String ref=refObj.getobjectrefoid();
+        
+        String name=iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.Gebaeudenummer.tag_Nummer);
+        if(gebaeude.contains(ref)) {
+            gebaeudenummer.put(tid, name);
+        }
+    }
+    private void mapBoFlaecheGebaeudenummerPos(IomObject iomObj) {
+        IomObject refObj=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.GebaeudenummerPos.tag_GebaeudenummerPos_von, 0);
+        String ref=refObj.getobjectrefoid();
+        String name=null;
+        String layer=null;
+        if(gebaeudenummer.containsKey(ref)) {
+            name=gebaeudenummer.get(ref);
+            layer="01219";
+        }
+        if(layer!=null) {
+            IomObject dxfObj=new Iom_jObject(DxfWriter.IOM_TEXT,null);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_LAYERNAME, layer);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT, name);
+            dxfObj.setattrvalue(DxfWriter.IOM_ATTR_TEXT_SIZE,"0.9");
+            IomObject geom=iomObj.getattrobj(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.GebaeudenummerPos.tag_Pos,0);
+            if(perimeter!=null) {
+                try {
+                    Coordinate coord = Iox2jts.coord2JTS(geom);
+                    if(!intersectsPerimeter(jtsFactory.createPoint(coord))) {
+                        return;
+                    }
+                } catch (Iox2jtsException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+            dxfObj.addattrobj(DxfWriter.IOM_ATTR_GEOM, geom);
+            String ori=mapOri(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.GebaeudenummerPos.tag_Ori));
+            if(ori!=null) {
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_ORI, ori);
+            }
+            String hali=mapHali(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.GebaeudenummerPos.tag_HAli));
+            if(hali!=null) {
+                dxfObj.setattrvalue(DxfWriter.IOM_ATTR_HALI, hali);
+            }
+            String vali=mapVali(iomObj.getattrvalue(ch.interlis.models.DM01AVCH24LV95D.Bodenbedeckung.GebaeudenummerPos.tag_VAli));
             if(vali!=null) {
                 dxfObj.setattrvalue(DxfWriter.IOM_ATTR_VALI, vali);
             }

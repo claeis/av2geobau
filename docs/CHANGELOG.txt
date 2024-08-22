@@ -1,4 +1,4 @@
-av2geobau 1.4.0 (2024-xx-xx)
+av2geobau 1.4.0 (2024-08-22)
 --------------------------------
 - add Bodenbedeckung.Gebaeudenummer.Nummer (01219) (#12)
 

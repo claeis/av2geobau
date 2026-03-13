@@ -11,7 +11,7 @@ For the current version of av2geobau, you will need a JRE (Java Runtime Environm
 The JRE (Java Runtime Environment) can be downloaded for free from the Website <http://www.java.com/>.
 
 ## Software Download 
-<https://github.com/claeis/av2geobau/releases>
+<https://downloads.interlis.ch/av2geobau/>
 
 ## Installing av2geobau
 To install the av2geobau, choose a directory and extract the distribution file there. 

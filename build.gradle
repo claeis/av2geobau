@@ -7,10 +7,11 @@ allprojects {
 	targetCompatibility = "1.8"
 }
 
-version '1.4.1'+System.getProperty('release','-SNAPSHOT')
+version '1.4.2'+System.getProperty('release','-SNAPSHOT')
 
 configurations {
     deployerJars
+    ftpAntTask
 }
 
 // to get the latest SNAPSHOT uncomment the following lines
@@ -27,6 +28,7 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-simple', version: "1.7.25"
     testCompile group: 'junit', name: 'junit', version: '4.12'
     deployerJars "org.apache.maven.wagon:wagon-ftp:3.0.0"
+    ftpAntTask "org.apache.ant:ant-commons-net:1.10.7"
 }
 
 repositories {
@@ -47,6 +49,12 @@ def repos_pwd = System.getProperty('repos_pwd',properties.get('repos_pwd','repos
 def repos_usr = System.getProperty('repos_usr',properties.get('repos_usr','repos_usr'))
 def python= System.getProperty('python',properties.get('python','python'))
 def rst2html= System.getProperty('rst2html',properties.get('rst2html','rst2html'))
+ext {
+	downloads_pwd = System.getProperty('downloads_pwd',properties.get('downloads_pwd','downloads_pwd'))
+	downloads_usr = System.getProperty('downloads_usr',properties.get('downloads_usr','downloads_usr'))
+}
+def docs_pwd = System.getProperty('docs_pwd',properties.get('docs_pwd','docs_pwd'))
+def docs_usr = System.getProperty('docs_usr',properties.get('docs_usr','docs_usr'))
 
 def generatedResources = "$buildDir/generated-resources/main"
 
@@ -101,7 +109,7 @@ task usrdoc(type:Exec) {
 	}
 		workingDir = project.buildDir
 		executable python
-		args = [rst2html, infile, outfile]
+		args = ['-m', 'docutils.core' ,'--writer=html', infile, outfile]
 }
 
 task bindist(dependsOn:[usrdoc,jar],type: Zip){
@@ -154,4 +162,50 @@ uploadArchives {
             }
         }
     }
+}
+
+void uploadFile(String programName, File archiveFile) {
+		def archiveDir= archiveFile.parent
+		def archiveName=archiveFile.name
+		def json = groovy.json.JsonOutput.toJson([filename: 'https://downloads.interlis.ch/'+programName+'/'+archiveName, version: project.version ,date: new Date().format( 'yyyy-MM-dd' )])
+		def releaseFile = new File(archiveDir,programName+"-release.json")
+		releaseFile.write(json)
+		ant.ftp(server: "jql.ftp.infomaniak.com", userid: project.ext.downloads_usr, password: project.ext.downloads_pwd, 
+			action: "put",
+			remoteDir: '/'+programName, passive:"yes") {
+				fileset(dir: archiveDir ) {
+					include(name: archiveName)
+					include(name: releaseFile.name)
+				}
+		}
+
+}
+
+
+task uploadBin(dependsOn: [bindist]) {
+	doLast {
+		ant.taskdef(name: 'ftp',
+					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+					classpath: configurations.ftpAntTask.asPath)
+		uploadFile('av2geobau',bindist.archiveFile.get().asFile)
+	}
+}
+
+
+task uploadDoc(){  // dependsOn: [usrdoc,ilidoc]) {
+	doLast {
+		ant.taskdef(name: 'ftp',
+					classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+					classpath: configurations.ftpAntTask.asPath)
+		def remoteDir="/av2geobau/"+project.version
+		ant.ftp(action:"mkdir", server: "jql.ftp.infomaniak.com", userid: docs_usr, password: docs_pwd, 
+			remoteDir: remoteDir, passive:"yes") {
+		}
+		ant.ftp(server: "jql.ftp.infomaniak.com", userid: docs_usr, password: docs_pwd, 
+			remoteDir: remoteDir, passive:"yes") {
+				fileset(dir:  "build/docs") {
+					include(name: "av2geobau_de.html")
+				}
+		}
+	}
 }

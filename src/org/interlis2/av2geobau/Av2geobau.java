@@ -149,6 +149,7 @@ public class Av2geobau {
                 itf2dxf.setPerimeter(perimeter);
                 
                 try{
+                    writeHeader(fw);
                     writeBlocks(fw);
                     fw.write(DxfUtil.toString(0, "SECTION"));
                     fw.write(DxfUtil.toString(2, "ENTITIES"));
@@ -228,6 +229,36 @@ public class Av2geobau {
 		return ret;
 	}
 
+    private void writeHeader(java.io.Writer fw) throws IOException {
+        // BLOCK (Symbole)             
+        fw.write(DxfUtil.toString(0, "SECTION"));
+        fw.write(DxfUtil.toString(2, "HEADER"));
+        fw.write(DxfUtil.toString(9,"$ACADVER"));//                                  : Kommentar: Version ist immer gut
+        fw.write(DxfUtil.toString(1,"AC1009"));
+        fw.write(DxfUtil.toString(9,"$LTSCALE"));//                                  : Kommentar: Wird mit gestrichelten Linien wichtig
+        fw.write(DxfUtil.toString(40,"1.0"));
+        fw.write(DxfUtil.toString(9,"$LUNITS"));//                                  : Kommentar: 2 = Dezimale Einheiten
+        fw.write(DxfUtil.toString(70,"2"));
+        fw.write(DxfUtil.toString(9,"$LUPREC"));//                                  : Kommentar: 3 Nachkommastellen bei Längen
+        fw.write(DxfUtil.toString(70,"3"));
+        fw.write(DxfUtil.toString(9,"$AUNITS"));//                                  : Kommentar: Winkeleinheit Gon
+        fw.write(DxfUtil.toString(70,"2"));
+        fw.write(DxfUtil.toString(9,"$AUPREC"));//                                  : Kommentar: 3 Nachkomma bei WInkel
+        fw.write(DxfUtil.toString(70,"3"));
+        fw.write(DxfUtil.toString(9,"$TDCREATE"));//                                  : Kommentar: dynamisches Dateierstellungsdatum (bleibt "ewig" in der Datei)
+        fw.write(DxfUtil.toString(40,"2461181.5130902780219913"));
+        fw.write(DxfUtil.toString(9,"$ANGBASE"));//                                  : Kommentar: = Pi/2 = Norden als 0 Gn
+        fw.write(DxfUtil.toString(50,"1.571"));
+        fw.write(DxfUtil.toString(9,"$ANGDIR"));//                                  : Kommentar: Winkelrichtung rechts herum
+        fw.write(DxfUtil.toString(70,"1"));
+        //fw.write(DxfUtil.toString(9,"$USERI1"));//                                  : Kommentar: In den USER-Werten könnte man Spezialinfo einbauen. Ob das klug ist weiss ich nicht ..
+        //fw.write(DxfUtil.toString(70,"0"));
+        fw.write(DxfUtil.toString(9,"$PLINEGEN"));//                                  : Kommentar: Wird auch mit Strichmustern relevant
+        fw.write(DxfUtil.toString(70,"1"));//
+        fw.write(DxfUtil.toString(9,"$PSLTSCALE"));//                                  : Kommentar: Wird auch mit Strichmustern relevant
+        fw.write(DxfUtil.toString(70,"1"));
+        fw.write(DxfUtil.toString(0, "ENDSEC"));
+    }
     private void writeBlocks(java.io.Writer fw) throws IOException {
         // BLOCK (Symbole)             
         fw.write(DxfUtil.toString(0, "SECTION"));

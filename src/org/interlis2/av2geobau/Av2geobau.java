@@ -250,7 +250,7 @@ public class Av2geobau {
         fw.write(DxfUtil.toString(40,new Date()));
         
         fw.write(DxfUtil.toString(9,"$ANGBASE"));//                                  : Kommentar: = Pi/2 = Norden als 0 Gn
-        fw.write(DxfUtil.toString(50,"1.571"));
+        fw.write(DxfUtil.toString(50,"90"));
         fw.write(DxfUtil.toString(9,"$ANGDIR"));//                                  : Kommentar: Winkelrichtung rechts herum
         fw.write(DxfUtil.toString(70,"1"));
         //fw.write(DxfUtil.toString(9,"$USERI1"));//                                  : Kommentar: In den USER-Werten könnte man Spezialinfo einbauen. Ob das klug ist weiss ich nicht ..

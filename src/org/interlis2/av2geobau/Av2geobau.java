@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 
 import org.interlis2.av2geobau.impl.DxfWriter;
@@ -246,7 +247,8 @@ public class Av2geobau {
         fw.write(DxfUtil.toString(9,"$AUPREC"));//                                  : Kommentar: 3 Nachkomma bei WInkel
         fw.write(DxfUtil.toString(70,"3"));
         fw.write(DxfUtil.toString(9,"$TDCREATE"));//                                  : Kommentar: dynamisches Dateierstellungsdatum (bleibt "ewig" in der Datei)
-        fw.write(DxfUtil.toString(40,"2461181.5130902780219913"));
+        fw.write(DxfUtil.toString(40,new Date()));
+        
         fw.write(DxfUtil.toString(9,"$ANGBASE"));//                                  : Kommentar: = Pi/2 = Norden als 0 Gn
         fw.write(DxfUtil.toString(50,"1.571"));
         fw.write(DxfUtil.toString(9,"$ANGDIR"));//                                  : Kommentar: Winkelrichtung rechts herum

@@ -2,7 +2,10 @@ package org.interlis2.av2geobau.impl;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class DxfUtil {
     private static final DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.US);
@@ -66,7 +69,43 @@ public class DxfUtil {
         else if (value instanceof Integer) {return toString(code, ((Integer)value).intValue());}
         else if (value instanceof Float) {return toString(code, ((Float)value).floatValue(), 3);}
         else if (value instanceof Double) {return toString(code, ((Double)value).doubleValue(), 6);}
+        else if (value instanceof Date) {return toString(code, (Date)value);}
         else return toString(code, value.toString());
+    }
+
+    public static String toString(int code, Date value) {
+        return toString(code, toDouble(value), 8);
+    }
+    public static double toDouble(Date date) {
+        Calendar cal = Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"));
+        cal.setTime(date);
+    
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1; // 0-basiert
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        
+        // Julianische Tageszahl berechnen
+        if (month <= 2) {
+            year -= 1;
+            month += 12;
+        }
+        int a = year / 100;
+        int b = a / 4;
+        int c = 2 - a + b;
+        int e = (int) (365.25 * (year + 4716));
+        int f = (int) (30.6001 * (month + 1));
+        double julianDay = c + day + e + f - 1524.5;
+    
+        // Tagesbruchteil (Stunden, Minuten, Sekunden, Millisekunden)
+        double hour = cal.get(Calendar.HOUR_OF_DAY);
+        double minute = cal.get(Calendar.MINUTE);
+        double second = cal.get(Calendar.SECOND);
+        double millisecond = cal.get(Calendar.MILLISECOND);
+    
+        double totalSeconds = (hour * 3600) + (minute * 60) + second + (millisecond / 1000.0);
+        double dayFraction = totalSeconds / 86400.0;
+    
+        return julianDay + dayFraction;
     }
 
 }
